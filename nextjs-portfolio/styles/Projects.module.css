@@ -1,0 +1,226 @@
+.section {
+    padding: 100px 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 50px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 25px;
+    }
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    font-size: clamp(26px, 5vw, 32px);
+    font-weight: 600;
+    color: var(--lightest-slate);
+    margin-bottom: 40px;
+    white-space: nowrap;
+}
+
+.sectionTitle::after {
+    content: '';
+    display: block;
+    width: 300px;
+    height: 1px;
+    margin-left: 20px;
+    background-color: var(--lightest-navy);
+}
+
+.sectionNumber {
+    font-family: var(--font-mono);
+    font-size: clamp(16px, 3vw, 20px);
+    font-weight: 400;
+    color: var(--green);
+    margin-right: 10px;
+}
+
+.projectsGrid {
+    margin-top: 50px;
+}
+
+.project.featured {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 100px;
+}
+
+@media (max-width: 768px) {
+    .project.featured {
+        grid-template-columns: 1fr;
+        margin-bottom: 70px;
+    }
+}
+
+.projectContent {
+    grid-column: 1 / 7;
+    position: relative;
+    z-index: 2;
+}
+
+.project.reverse .projectContent {
+    grid-column: 7 / -1;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .projectContent,
+    .project.reverse .projectContent {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
+}
+
+.projectOverline {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--green);
+    margin-bottom: 10px;
+}
+
+.projectTitle {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.projectTitle a {
+    color: var(--lightest-slate);
+}
+
+.projectTitle a:hover {
+    color: var(--green);
+}
+
+.projectDescription {
+    background-color: var(--light-navy);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+    margin-bottom: 20px;
+}
+
+.projectDescription p {
+    margin: 0;
+}
+
+.projectTechList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+.project.reverse .projectTechList {
+    justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    .projectTechList,
+    .project.reverse .projectTechList {
+        justify-content: flex-start;
+    }
+}
+
+.projectImage {
+    grid-column: 6 / -1;
+    position: relative;
+    z-index: 1;
+}
+
+.project.reverse .projectImage {
+    grid-column: 1 / 8;
+}
+
+@media (max-width: 768px) {
+    .projectImage,
+    .project.reverse .projectImage {
+        grid-column: 1 / -1;
+        opacity: 0.25;
+    }
+}
+
+.projectImage img {
+    width: 100%;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.projectImage a::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: var(--navy);
+    mix-blend-mode: screen;
+    opacity: 0.3;
+    transition: var(--transition);
+}
+
+.projectImage a:hover::before {
+    opacity: 0;
+}
+
+/* Other Projects */
+
+.otherProjectsTitle {
+    text-align: center;
+    font-size: 32px;
+    margin: 100px 0 50px;
+}
+
+.otherProjectsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 50px;
+}
+
+.projectCard {
+    background-color: var(--light-navy);
+    border-radius: var(--border-radius);
+    padding: 30px 28px;
+    transition: var(--transition);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.projectCard:hover {
+    transform: translateY(-7px);
+}
+
+.projectCardTitle {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: var(--lightest-slate);
+}
+
+.projectCardDescription {
+    font-size: 15px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.projectCardTech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+}

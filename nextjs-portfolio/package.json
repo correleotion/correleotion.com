@@ -1,0 +1,19 @@
+{
+  "name": "nextjs-portfolio",
+  "version": "1.0.0",
+  "description": "Personal portfolio website built with Next.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": ["portfolio", "nextjs", "react"],
+  "author": "Thanakorn Sin-on",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^16.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
