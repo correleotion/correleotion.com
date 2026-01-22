@@ -16,6 +16,7 @@ export default function Navigation() {
           <a href="#about" className={styles.navLink}>About</a>
           <a href="#experience" className={styles.navLink}>Experience</a>
           <a href="#projects" className={styles.navLink}>Projects</a>
+          <a href="#blog" className={styles.navLink}>Blog</a>
           <a href="#contact" className={styles.navLink}>Contact</a>
           <a href="resume.pdf" className={`${styles.navLink} ${styles.resumeBtn}`} target="_blank" rel="noopener noreferrer">
             Resume
