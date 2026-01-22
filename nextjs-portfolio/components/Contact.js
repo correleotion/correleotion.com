@@ -5,7 +5,7 @@ export default function Contact() {
     <section className={styles.section} id="contact">
       <div className={styles.container}>
         <h2 className={`${styles.sectionTitle} ${styles.centered}`}>
-          <span className={styles.sectionNumber}>04.</span> What's Next?
+          <span className={styles.sectionNumber}>05.</span> What's Next?
         </h2>
         <h2 className={styles.contactTitle}>Get In Touch</h2>
         <p className={styles.contactDescription}>

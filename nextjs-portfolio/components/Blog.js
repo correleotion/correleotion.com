@@ -1,35 +1,6 @@
 import styles from '../styles/Blog.module.css'
 import Link from 'next/link'
-
-const blogPosts = [
-  {
-    id: 1,
-    slug: 'getting-started-with-data-science',
-    title: 'Getting Started with Data Science',
-    excerpt: 'A beginner-friendly guide to starting your journey in data science, covering essential tools, languages, and concepts you need to know.',
-    date: 'January 15, 2024',
-    readTime: '5 min read',
-    tags: ['Data Science', 'Python', 'Beginner']
-  },
-  {
-    id: 2,
-    slug: 'machine-learning-fundamentals',
-    title: 'Machine Learning Fundamentals',
-    excerpt: 'Understanding the core concepts of machine learning, from supervised learning to neural networks, explained in simple terms.',
-    date: 'January 10, 2024',
-    readTime: '8 min read',
-    tags: ['Machine Learning', 'AI', 'Tutorial']
-  },
-  {
-    id: 3,
-    slug: 'building-portfolio-with-nextjs',
-    title: 'Building a Portfolio with Next.js',
-    excerpt: 'Learn how to create a modern, fast, and SEO-friendly portfolio website using Next.js and React.',
-    date: 'January 5, 2024',
-    readTime: '6 min read',
-    tags: ['Next.js', 'React', 'Web Dev']
-  }
-]
+import { blogPosts } from '../data/blogPosts'
 
 export default function Blog() {
   return (
