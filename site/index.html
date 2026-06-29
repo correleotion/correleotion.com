@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thanakorn Sin-on — AI Engineer & Data Scientist</title>
+  <meta name="description" content="Portfolio of Thanakorn Sin-on (correleotion) — AI / ML engineer and data scientist based in Pathum Thani, Thailand.">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- apply saved theme/lang before first paint to avoid a flash -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        var l = localStorage.getItem('lang');
+        var a = localStorage.getItem('accent');
+        var el = document.documentElement;
+        if (t) el.setAttribute('data-theme', t);
+        if (a) el.setAttribute('data-accent', a);
+        if (l) el.setAttribute('lang', l);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="#top" class="brand">
+        <span class="brand__dot"></span>
+        correleotion
+      </a>
+      <div class="nav__links">
+        <a href="#about" class="nav__link" data-i18n="navAbout">about</a>
+        <a href="#work" class="nav__link" data-i18n="navWork">work</a>
+        <a href="#stack" class="nav__link" data-i18n="navStack">stack</a>
+        <a href="#contact" class="nav__link" data-i18n="navContact">contact</a>
+        <div class="nav__toggles">
+          <button type="button" class="btn-ghost" data-action="toggle-lang">EN</button>
+          <button type="button" class="btn-ghost btn-ghost--icon" data-action="toggle-theme">
+            <span class="btn-ghost__icon" data-role="theme-icon">●</span><span data-role="theme-label">DARK</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top" class="container">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero__coords">
+        <span>PATHUM THANI, TH</span>
+        <span class="sep">/</span>
+        <span>UTC+7</span>
+        <span class="sep">/</span>
+        <span>2026</span>
+      </div>
+
+      <h1 class="hero__title">
+        Thanakorn<br>Sin-on<span class="cursor" aria-hidden="true"></span>
+      </h1>
+
+      <div class="hero__role-line">
+        <span class="hero__role" data-i18n="heroRole">AI Engineer</span>
+        <span class="hero__role-sub" data-i18n="heroRoleSub">&amp; Data Scientist</span>
+      </div>
+
+      <p class="hero__tagline" data-i18n="heroTagline"></p>
+
+      <div class="hero__actions">
+        <a href="#work" class="btn-primary">
+          <span data-i18n="btnWork">View work</span> <span class="arrow">→</span>
+        </a>
+        <a href="https://github.com/correleotion" class="btn-outline">GitHub</a>
+        <span class="badge-available">
+          <span class="badge-available__dot"></span>
+          <span data-i18n="avail">Available for 2026 internships</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- META STRIP -->
+    <div class="meta-strip">
+      <div class="meta-cell">
+        <div class="meta-cell__label" data-i18n="mRoleL">ROLE</div>
+        <div class="meta-cell__value" data-i18n="mRoleV">AI / ML Engineer</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-cell__label" data-i18n="mFocusL">FOCUS</div>
+        <div class="meta-cell__value" data-i18n="mFocusV">CV · Statistics</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-cell__label" data-i18n="mStackL">STACK</div>
+        <div class="meta-cell__value" data-i18n="mStackV">Python · PyTorch</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-cell__label" data-i18n="mEduL">EDU</div>
+        <div class="meta-cell__value" data-i18n="mEduV">Thammasat U.</div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about" class="section section--about">
+      <div class="section__head">
+        <span class="section__num">01</span>
+        <h2 class="section__title" data-i18n="aboutH">About</h2>
+      </div>
+      <div class="about__grid">
+        <div>
+          <p class="lede" data-i18n="aboutLede"></p>
+          <p class="prose" data-i18n="aboutP1"></p>
+          <p class="prose" data-i18n="aboutP2"></p>
+        </div>
+        <div>
+          <div class="placeholder placeholder--portrait">DROP A PORTRAIT</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section id="work" class="section">
+      <div class="section__head section__head--split">
+        <div class="section__head-group">
+          <span class="section__num">02</span>
+          <h2 class="section__title" data-i18n="workH">Selected Projects</h2>
+        </div>
+        <a href="https://github.com/correleotion?tab=repositories" class="link-muted" data-i18n="allRepos">all repos ↗</a>
+      </div>
+
+      <!-- featured -->
+      <a href="https://github.com/correleotion/Durian-Leaf-Disease-Classification" class="card-featured">
+        <div class="card-featured__head">
+          <span class="card-featured__tag" data-i18n="featured">★ FEATURED</span>
+          <span class="card-featured__lang">Jupyter / PyTorch</span>
+        </div>
+        <h3 class="card-featured__title" data-i18n="featTitle"></h3>
+        <p class="card-featured__desc" data-i18n="featDesc"></p>
+        <div class="tag-row">
+          <span class="tag--invert">Computer Vision</span>
+          <span class="tag--invert">CNN</span>
+          <span class="tag--invert">Image Augmentation</span>
+        </div>
+      </a>
+
+      <!-- grid -->
+      <div class="card-grid">
+        <a href="https://github.com/correleotion/Statistical-Analysis-of-Performance-Factors-in-Formula-1-2010-2024-" class="card">
+          <div class="card__head">
+            <span class="card__num">02</span>
+            <span class="card__lang">Python · Stats</span>
+          </div>
+          <h3 class="card__title" data-i18n="p2Title"></h3>
+          <p class="card__desc" data-i18n="p2Desc"></p>
+          <div class="tag-row">
+            <span class="tag">Regression</span>
+            <span class="tag">Data Viz</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/correleotion/Data-Visualization-Using-Python-Project" class="card">
+          <div class="card__head">
+            <span class="card__num">03</span>
+            <span class="card__lang">Python · Viz</span>
+          </div>
+          <h3 class="card__title" data-i18n="p3Title"></h3>
+          <p class="card__desc" data-i18n="p3Desc"></p>
+          <div class="tag-row">
+            <span class="tag">Matplotlib</span>
+            <span class="tag">Pandas</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/correleotion/MP-Asset-Scanner" class="card">
+          <div class="card__head">
+            <span class="card__num">04</span>
+            <span class="card__lang">Python · Tool</span>
+          </div>
+          <h3 class="card__title" data-i18n="p4Title"></h3>
+          <p class="card__desc" data-i18n="p4Desc"></p>
+          <div class="tag-row">
+            <span class="tag">Automation</span>
+            <span class="tag">CLI</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/correleotion/unbuy" class="card">
+          <div class="card__head">
+            <span class="card__num">05</span>
+            <span class="card__lang">TypeScript</span>
+          </div>
+          <h3 class="card__title" data-i18n="p5Title"></h3>
+          <p class="card__desc" data-i18n="p5Desc"></p>
+          <div class="tag-row">
+            <span class="tag">TypeScript</span>
+            <span class="tag">Web</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" class="section">
+      <div class="section__head">
+        <span class="section__num">03</span>
+        <h2 class="section__title" data-i18n="stackH">Stack</h2>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-cell">
+          <div class="stack-cell__label" data-i18n="sLang">LANGUAGES</div>
+          <div class="stack-cell__items">Python<br>TypeScript<br>SQL<br>R</div>
+        </div>
+        <div class="stack-cell">
+          <div class="stack-cell__label" data-i18n="sML">ML / AI</div>
+          <div class="stack-cell__items">PyTorch<br>scikit-learn<br>CNNs<br>Computer Vision</div>
+        </div>
+        <div class="stack-cell">
+          <div class="stack-cell__label" data-i18n="sData">DATA</div>
+          <div class="stack-cell__items">Pandas / NumPy<br>Matplotlib<br>Seaborn<br>Jupyter</div>
+        </div>
+        <div class="stack-cell">
+          <div class="stack-cell__label" data-i18n="sTools">TOOLS</div>
+          <div class="stack-cell__items">Git / GitHub<br>VS Code<br>Linux<br>Notebooks</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="section">
+      <div class="section__head">
+        <span class="section__num">04</span>
+        <h2 class="section__title" data-i18n="expH">Experience</h2>
+      </div>
+      <div class="timeline">
+        <div class="timeline__row">
+          <div class="timeline__time" data-i18n="present">— present</div>
+          <div>
+            <div class="timeline__title" data-i18n="exp2Title"></div>
+            <div class="timeline__sub" data-i18n="exp2Sub"></div>
+            <p class="timeline__desc" data-i18n="exp2Desc"></p>
+          </div>
+        </div>
+        <div class="timeline__row">
+          <div class="timeline__time timeline__time--faint">[ add ]</div>
+          <div>
+            <div class="timeline__add" data-i18n="expAdd"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" class="section">
+      <div class="section__head">
+        <span class="section__num">05</span>
+        <h2 class="section__title" data-i18n="eduH">Education</h2>
+      </div>
+      <div class="timeline">
+        <div class="timeline__row">
+          <div class="timeline__time-group">
+            <div class="placeholder placeholder--logo">TU logo</div>
+            <div class="timeline__time" data-i18n="years1">2022 — 2026</div>
+          </div>
+          <div>
+            <div class="timeline__title" data-i18n="exp1Title"></div>
+            <div class="timeline__sub" data-i18n="exp1Sub"></div>
+            <p class="timeline__desc" data-i18n="exp1Desc"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AWARDS -->
+    <section id="awards" class="section">
+      <div class="section__head">
+        <span class="section__num">06</span>
+        <h2 class="section__title" data-i18n="awardsH">Awards</h2>
+      </div>
+      <div class="timeline">
+        <div class="timeline__row">
+          <div class="timeline__place"><span class="diamond">◆</span><span data-i18n="aw1Place"></span></div>
+          <div>
+            <div class="timeline__title" data-i18n="aw1Title"></div>
+            <div class="timeline__sub" data-i18n="aw1Sub"></div>
+            <p class="timeline__desc" data-i18n="aw1Desc"></p>
+          </div>
+        </div>
+        <div class="timeline__row">
+          <div class="timeline__place"><span class="diamond">◆</span><span data-i18n="aw2Place"></span></div>
+          <div>
+            <div class="timeline__title" data-i18n="aw2Title"></div>
+            <div class="timeline__sub" data-i18n="aw2Sub"></div>
+            <p class="timeline__desc" data-i18n="aw2Desc"></p>
+          </div>
+        </div>
+        <div class="timeline__row">
+          <div class="timeline__time timeline__time--faint">[ add ]</div>
+          <div>
+            <div class="timeline__add" data-i18n="awAdd"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WRITING -->
+    <section id="writing" class="section">
+      <div class="section__head section__head--split">
+        <div class="section__head-group">
+          <span class="section__num">07</span>
+          <h2 class="section__title" data-i18n="writingH">Writing</h2>
+        </div>
+        <span class="section__aside" data-i18n="wNotes">notes &amp; build logs</span>
+      </div>
+      <div class="timeline">
+        <a href="#" class="writing-row">
+          <span class="writing-row__date">2026.05</span>
+          <span class="writing-row__title" data-i18n="w1"></span>
+          <span class="writing-row__arrow">→</span>
+        </a>
+        <a href="#" class="writing-row">
+          <span class="writing-row__date">2026.02</span>
+          <span class="writing-row__title" data-i18n="w2"></span>
+          <span class="writing-row__arrow">→</span>
+        </a>
+        <a href="#" class="writing-row">
+          <span class="writing-row__date" data-i18n="draft">draft</span>
+          <span class="writing-row__title writing-row__title--draft" data-i18n="w3"></span>
+          <span class="writing-row__arrow writing-row__arrow--faint">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section section--contact">
+      <div class="section__head">
+        <span class="section__num">08</span>
+        <h2 class="section__title" data-i18n="contactH">Contact</h2>
+      </div>
+      <h3 class="contact__title">
+        <span data-i18n="contactHead1">Let's build something</span><br><span data-i18n="contactHead2">worth shipping.</span>
+      </h3>
+      <a href="mailto:thanakorn.sinon@gmail.com" class="contact__email">thanakorn.sinon@gmail.com</a>
+
+      <div class="social">
+        <a href="https://github.com/correleotion" class="social__link"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>correleotion</a>
+        <a href="https://linkedin.com/in/correleotion" class="social__link"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"></path></svg>correleotion</a>
+        <a href="https://x.com/correleotion" class="social__link"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>correleotion</a>
+        <a href="https://instagram.com/correleotion" class="social__link"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"></path></svg>correleotion</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="container footer">
+    <span data-i18n="copyright">© 2026 Thanakorn Sin-on — correleotion.com</span>
+    <span data-i18n="footerNote">Designed &amp; built with care.</span>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
