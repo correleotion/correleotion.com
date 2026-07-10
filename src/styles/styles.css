@@ -170,6 +170,14 @@ body {
   margin-bottom: 36px;
 }
 .hero__coords .sep { opacity: 0.5; }
+.flag-th {
+  display: inline-block;
+  width: 18px;
+  height: 12px;
+  vertical-align: -1px;
+  margin-left: 4px;
+  outline: 1px solid var(--line); /* keeps the white stripe visible on the light bg */
+}
 .hero__title {
   margin: 0;
   font-family: var(--sans);
