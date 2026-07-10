@@ -6,7 +6,22 @@ file server.
 
 ```
 site/
-├── index.html        # all markup (semantic, with data-i18n hooks)
+├── sections/          # ← EDIT THESE — one file per page section
+│   ├── nav.html
+│   ├── hero.html
+│   ├── meta.html
+│   ├── about.html
+│   ├── work.html
+│   ├── stack.html
+│   ├── experience.html
+│   ├── education.html
+│   ├── awards.html
+│   ├── writing.html
+│   ├── contact.html
+│   └── footer.html
+├── template.html      # page shell (head + <!-- @include name --> markers)
+├── build.mjs          # assembles sections + template → index.html
+├── index.html         # BUILD OUTPUT — do not edit by hand
 ├── css/
 │   ├── styles.css     # layout, components, light/dark theme tokens
 │   └── fonts.css      # @font-face for the self-hosted IBM Plex fonts
@@ -15,6 +30,19 @@ site/
 │   └── main.js        # language + theme toggles (persisted to localStorage)
 └── fonts/             # IBM Plex Mono / Sans / Sans Thai (woff2 subsets)
 ```
+
+## Editing a section
+
+1. Edit the relevant file in `sections/` (e.g. `sections/about.html`).
+2. Regenerate the page:  `node build.mjs`  (run from inside `site/`).
+3. Commit and push — the deploy workflow rebuilds and publishes automatically.
+
+You never edit `index.html` directly; it is generated. If you forget to run
+`node build.mjs` locally, CI runs it anyway before deploying, so pushing a section
+change is always enough.
+
+To add or reorder sections, edit the `<!-- @include name -->` markers in
+`template.html`.
 
 ## Editing content
 
