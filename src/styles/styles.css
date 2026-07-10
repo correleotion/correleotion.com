@@ -148,6 +148,7 @@ body {
   padding: 5px 10px;
   cursor: pointer;
   line-height: 1;
+  text-decoration: none;
 }
 .btn-ghost--icon {
   display: inline-flex;
