@@ -389,12 +389,13 @@ body {
 
 /* real images dropped into the old placeholder slots */
 .edu-logo {
-  width: 72px;
-  height: 72px;
+  width: 100%; /* fill the date column, like the experience logos */
+  height: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   object-fit: contain;
   background: #fff;
-  padding: 2px;
+  padding: 4px;
   display: block;
 }
 .exp-logo {
