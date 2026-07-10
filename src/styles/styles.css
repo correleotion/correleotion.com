@@ -380,6 +380,13 @@ body {
   padding: 2px;
   display: block;
 }
+.exp-logo {
+  height: 24px;
+  width: auto;
+  display: block;
+  opacity: 0.9;
+}
+html[data-theme="dark"] .exp-logo { filter: invert(1); }
 
 /* ---- work ---- */
 .card-featured {
