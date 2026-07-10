@@ -386,6 +386,7 @@ body {
   width: auto;
   display: block;
   opacity: 0.9;
+  align-self: flex-start; /* the flex column stretches children full-width otherwise */
 }
 .exp-logo--tall { height: 34px; }
 html[data-theme="dark"] .exp-logo { filter: invert(1); }
