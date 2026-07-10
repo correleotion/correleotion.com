@@ -158,7 +158,7 @@ body {
 .btn-ghost__icon { font-size: 12px; }
 
 /* ---- hero ---- */
-.hero { padding: 96px 0 72px; }
+.hero { padding: 48px 0 72px; }
 .hero__coords {
   font-family: var(--mono);
   font-size: 12px;
