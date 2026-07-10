@@ -382,13 +382,11 @@ body {
   display: block;
 }
 .exp-logo {
-  height: 24px;
-  width: auto;
+  width: 100%;
+  height: auto; /* keep the image's own aspect ratio at column width */
   display: block;
   opacity: 0.9;
-  align-self: flex-start; /* the flex column stretches children full-width otherwise */
 }
-.exp-logo--tall { height: 34px; }
 html[data-theme="dark"] .exp-logo { filter: invert(1); }
 
 /* ---- work ---- */
