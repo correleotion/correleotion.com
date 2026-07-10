@@ -387,6 +387,7 @@ body {
   display: block;
   opacity: 0.9;
 }
+.exp-logo--tall { height: 34px; }
 html[data-theme="dark"] .exp-logo { filter: invert(1); }
 
 /* ---- work ---- */
