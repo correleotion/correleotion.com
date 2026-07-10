@@ -1,0 +1,26 @@
+---
+// Tech stack columns — edit this array to change the grid.
+const columns = [
+  { labelKey: 'sLang', items: ['Python', 'TypeScript', 'SQL', 'R'] },
+  { labelKey: 'sML', items: ['PyTorch', 'scikit-learn', 'CNNs', 'Computer Vision'] },
+  { labelKey: 'sData', items: ['Pandas / NumPy', 'Matplotlib', 'Seaborn', 'Jupyter'] },
+  { labelKey: 'sTools', items: ['Git / GitHub', 'VS Code', 'Linux', 'Notebooks'] },
+];
+---
+
+<section id="stack" class="section">
+  <div class="section__head">
+    <span class="section__num">03</span>
+    <h2 class="section__title" data-i18n="stackH">Stack</h2>
+  </div>
+  <div class="stack-grid">
+    {
+      columns.map((col) => (
+        <div class="stack-cell">
+          <div class="stack-cell__label" data-i18n={col.labelKey} />
+          <div class="stack-cell__items" set:html={col.items.join('<br>')} />
+        </div>
+      ))
+    }
+  </div>
+</section>

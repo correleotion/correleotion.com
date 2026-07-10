@@ -1,0 +1,37 @@
+---
+import '../styles/fonts.css';
+import '../styles/styles.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thanakorn Sin-on — AI Engineer & Data Scientist</title>
+    <meta
+      name="description"
+      content="Portfolio of Thanakorn Sin-on (correleotion) — AI / ML engineer and data scientist based in Pathum Thani, Thailand."
+    />
+
+    <!-- apply saved theme/lang before first paint to avoid a flash -->
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          var l = localStorage.getItem('lang');
+          var a = localStorage.getItem('accent');
+          var el = document.documentElement;
+          if (t) el.setAttribute('data-theme', t);
+          if (a) el.setAttribute('data-accent', a);
+          if (l) el.setAttribute('lang', l);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+    <script is:inline src="/js/i18n.js"></script>
+    <script is:inline src="/js/main.js"></script>
+  </body>
+</html>

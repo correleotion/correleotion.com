@@ -1,0 +1,84 @@
+---
+// Project grid — edit this array to add/remove/reorder cards.
+// Titles and descriptions are i18n keys resolved at runtime from public/js/i18n.js.
+const projects = [
+  {
+    num: '02',
+    href: 'https://github.com/correleotion/Statistical-Analysis-of-Performance-Factors-in-Formula-1-2010-2024-',
+    lang: 'Python · Stats',
+    titleKey: 'p2Title',
+    descKey: 'p2Desc',
+    tags: ['Regression', 'Data Viz'],
+  },
+  {
+    num: '03',
+    href: 'https://github.com/correleotion/Data-Visualization-Using-Python-Project',
+    lang: 'Python · Viz',
+    titleKey: 'p3Title',
+    descKey: 'p3Desc',
+    tags: ['Matplotlib', 'Pandas'],
+  },
+  {
+    num: '04',
+    href: 'https://github.com/correleotion/MP-Asset-Scanner',
+    lang: 'Python · Tool',
+    titleKey: 'p4Title',
+    descKey: 'p4Desc',
+    tags: ['Automation', 'CLI'],
+  },
+  {
+    num: '05',
+    href: 'https://github.com/correleotion/unbuy',
+    lang: 'TypeScript',
+    titleKey: 'p5Title',
+    descKey: 'p5Desc',
+    tags: ['TypeScript', 'Web'],
+  },
+];
+---
+
+<section id="work" class="section">
+  <div class="section__head section__head--split">
+    <div class="section__head-group">
+      <span class="section__num">02</span>
+      <h2 class="section__title" data-i18n="workH">Selected Projects</h2>
+    </div>
+    <a href="https://github.com/correleotion?tab=repositories" class="link-muted" data-i18n="allRepos">all repos ↗</a>
+  </div>
+
+  <!-- featured -->
+  <a href="https://github.com/correleotion/Durian-Leaf-Disease-Classification" class="card-featured">
+    <div class="card-featured__head">
+      <span class="card-featured__tag" data-i18n="featured">★ FEATURED</span>
+      <span class="card-featured__lang">Jupyter / PyTorch</span>
+    </div>
+    <h3 class="card-featured__title" data-i18n="featTitle"></h3>
+    <p class="card-featured__desc" data-i18n="featDesc"></p>
+    <div class="tag-row">
+      <span class="tag--invert">Computer Vision</span>
+      <span class="tag--invert">CNN</span>
+      <span class="tag--invert">Image Augmentation</span>
+    </div>
+  </a>
+
+  <!-- grid -->
+  <div class="card-grid">
+    {
+      projects.map((p) => (
+        <a href={p.href} class="card">
+          <div class="card__head">
+            <span class="card__num">{p.num}</span>
+            <span class="card__lang">{p.lang}</span>
+          </div>
+          <h3 class="card__title" data-i18n={p.titleKey} />
+          <p class="card__desc" data-i18n={p.descKey} />
+          <div class="tag-row">
+            {p.tags.map((t) => (
+              <span class="tag">{t}</span>
+            ))}
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</section>
