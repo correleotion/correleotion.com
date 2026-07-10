@@ -38,11 +38,37 @@
   var SNAP_RANGE = 0.5;       // only snap when within 50% of viewport height
   var NAV_OFFSET = 70;        // matches scroll-margin-top on .section
 
-  // reduced-motion users still get the snap, just without the animation
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SNAP_DURATION = 700;    // ms of eased animation
 
   var timer = null;
   var snapping = false;
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  // hand-rolled animation: consistent easing everywhere, cancels on user input
+  function animateTo(target) {
+    var start = window.scrollY;
+    var dist = target - start;
+    var t0 = null;
+    var cancelled = false;
+
+    function cancel() { cancelled = true; }
+    window.addEventListener("wheel", cancel, { passive: true, once: true });
+    window.addEventListener("touchstart", cancel, { passive: true, once: true });
+
+    snapping = true;
+    function step(ts) {
+      if (cancelled) { snapping = false; return; }
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / SNAP_DURATION);
+      window.scrollTo(0, start + dist * easeInOutCubic(p));
+      if (p < 1) requestAnimationFrame(step);
+      else setTimeout(function () { snapping = false; }, 50);
+    }
+    requestAnimationFrame(step);
+  }
 
   function snapTargets() {
     var tops = [0];
@@ -67,9 +93,7 @@
     if (best === null || bestDist < 2) return;                 // already there
     if (bestDist > window.innerHeight * SNAP_RANGE) return;    // mid-section: don't yank
 
-    snapping = true;
-    window.scrollTo({ top: best, behavior: reduceMotion ? "auto" : "smooth" });
-    setTimeout(function () { snapping = false; }, 800);
+    animateTo(best);
   }
 
   window.addEventListener("scroll", function () {
