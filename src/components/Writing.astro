@@ -1,9 +1,9 @@
 ---
 // Writing list — edit this array to add posts. `draft: true` renders the muted style.
 const posts = [
-  { date: '2026.05', titleKey: 'w1', href: '#' },
-  { date: '2026.02', titleKey: 'w2', href: '#' },
-  { draft: true, titleKey: 'w3', href: '#' },
+  { date: '2026.05', title: 'Training a leaf-disease classifier on a tiny dataset', href: '#' },
+  { date: '2026.02', title: 'What 14 seasons of F1 data say about qualifying', href: '#' },
+  { draft: true, title: 'Add your own post — replace these placeholders', href: '#' },
 ];
 ---
 
@@ -11,23 +11,23 @@ const posts = [
   <div class="section__head section__head--split">
     <div class="section__head-group">
       <span class="section__num">07</span>
-      <h2 class="section__title" data-i18n="writingH">Writing</h2>
+      <h2 class="section__title">Writing</h2>
     </div>
-    <span class="section__aside" data-i18n="wNotes">notes &amp; build logs</span>
+    <span class="section__aside">notes &amp; build logs</span>
   </div>
   <div class="timeline">
     {
       posts.map((post) =>
         post.draft ? (
           <a href={post.href} class="writing-row">
-            <span class="writing-row__date" data-i18n="draft">draft</span>
-            <span class="writing-row__title writing-row__title--draft" data-i18n={post.titleKey} />
+            <span class="writing-row__date">draft</span>
+            <span class="writing-row__title writing-row__title--draft">{post.title}</span>
             <span class="writing-row__arrow writing-row__arrow--faint">→</span>
           </a>
         ) : (
           <a href={post.href} class="writing-row">
             <span class="writing-row__date">{post.date}</span>
-            <span class="writing-row__title" data-i18n={post.titleKey} />
+            <span class="writing-row__title">{post.title}</span>
             <span class="writing-row__arrow">→</span>
           </a>
         )

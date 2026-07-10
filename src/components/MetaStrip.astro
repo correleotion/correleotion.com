@@ -1,18 +1,19 @@
+---
+const cells = [
+  { label: 'ROLE', value: 'AI / ML Engineer' },
+  { label: 'FOCUS', value: 'CV · Statistics' },
+  { label: 'STACK', value: 'Python · PyTorch' },
+  { label: 'EDU', value: 'Thammasat U.' },
+];
+---
+
 <div class="meta-strip">
-  <div class="meta-cell">
-    <div class="meta-cell__label" data-i18n="mRoleL">ROLE</div>
-    <div class="meta-cell__value" data-i18n="mRoleV">AI / ML Engineer</div>
-  </div>
-  <div class="meta-cell">
-    <div class="meta-cell__label" data-i18n="mFocusL">FOCUS</div>
-    <div class="meta-cell__value" data-i18n="mFocusV">CV · Statistics</div>
-  </div>
-  <div class="meta-cell">
-    <div class="meta-cell__label" data-i18n="mStackL">STACK</div>
-    <div class="meta-cell__value" data-i18n="mStackV">Python · PyTorch</div>
-  </div>
-  <div class="meta-cell">
-    <div class="meta-cell__label" data-i18n="mEduL">EDU</div>
-    <div class="meta-cell__value" data-i18n="mEduV">Thammasat U.</div>
-  </div>
+  {
+    cells.map((c) => (
+      <div class="meta-cell">
+        <div class="meta-cell__label">{c.label}</div>
+        <div class="meta-cell__value">{c.value}</div>
+      </div>
+    ))
+  }
 </div>

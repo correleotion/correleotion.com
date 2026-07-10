@@ -14,24 +14,21 @@ import '../styles/styles.css';
       content="Portfolio of Thanakorn Sin-on (correleotion) — AI / ML engineer and data scientist based in Pathum Thani, Thailand."
     />
 
-    <!-- apply saved theme/lang before first paint to avoid a flash -->
+    <!-- apply saved theme before first paint to avoid a flash -->
     <script is:inline>
       (function () {
         try {
           var t = localStorage.getItem('theme');
-          var l = localStorage.getItem('lang');
           var a = localStorage.getItem('accent');
           var el = document.documentElement;
           if (t) el.setAttribute('data-theme', t);
           if (a) el.setAttribute('data-accent', a);
-          if (l) el.setAttribute('lang', l);
         } catch (e) {}
       })();
     </script>
   </head>
   <body>
     <slot />
-    <script is:inline src="/js/i18n.js"></script>
     <script is:inline src="/js/main.js"></script>
   </body>
 </html>

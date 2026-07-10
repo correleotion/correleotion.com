@@ -1,29 +1,46 @@
+---
+// Awards — edit this array with real competition results.
+const awards = [
+  {
+    place: '1st place',
+    title: 'Competition title — edit me',
+    sub: 'Organizer / event · 2025',
+    desc: 'Short note on what the project did and why it placed — replace with your real competition result.',
+  },
+  {
+    place: 'Finalist',
+    title: 'Hackathon / contest — edit me',
+    sub: 'Organizer / event · 2024',
+    desc: 'Another competition result — edit the placement, title, organizer, year, and description.',
+  },
+];
+---
+
 <section id="awards" class="section">
   <div class="section__head">
     <span class="section__num">06</span>
-    <h2 class="section__title" data-i18n="awardsH">Awards</h2>
+    <h2 class="section__title">Awards</h2>
   </div>
   <div class="timeline">
-    <div class="timeline__row">
-      <div class="timeline__place"><span class="diamond">◆</span><span data-i18n="aw1Place"></span></div>
-      <div>
-        <div class="timeline__title" data-i18n="aw1Title"></div>
-        <div class="timeline__sub" data-i18n="aw1Sub"></div>
-        <p class="timeline__desc" data-i18n="aw1Desc"></p>
-      </div>
-    </div>
-    <div class="timeline__row">
-      <div class="timeline__place"><span class="diamond">◆</span><span data-i18n="aw2Place"></span></div>
-      <div>
-        <div class="timeline__title" data-i18n="aw2Title"></div>
-        <div class="timeline__sub" data-i18n="aw2Sub"></div>
-        <p class="timeline__desc" data-i18n="aw2Desc"></p>
-      </div>
-    </div>
+    {
+      awards.map((a) => (
+        <div class="timeline__row">
+          <div class="timeline__place">
+            <span class="diamond">◆</span>
+            <span>{a.place}</span>
+          </div>
+          <div>
+            <div class="timeline__title">{a.title}</div>
+            <div class="timeline__sub">{a.sub}</div>
+            <p class="timeline__desc">{a.desc}</p>
+          </div>
+        </div>
+      ))
+    }
     <div class="timeline__row">
       <div class="timeline__time timeline__time--faint">[ add ]</div>
       <div>
-        <div class="timeline__add" data-i18n="awAdd"></div>
+        <div class="timeline__add">Add another award — edit this entry</div>
       </div>
     </div>
   </div>

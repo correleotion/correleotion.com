@@ -1,37 +1,36 @@
 ---
 // Project grid — edit this array to add/remove/reorder cards.
-// Titles and descriptions are i18n keys resolved at runtime from public/js/i18n.js.
 const projects = [
   {
     num: '02',
     href: 'https://github.com/correleotion/Statistical-Analysis-of-Performance-Factors-in-Formula-1-2010-2024-',
     lang: 'Python · Stats',
-    titleKey: 'p2Title',
-    descKey: 'p2Desc',
+    title: 'F1 Performance Factor Analysis',
+    desc: 'Statistical study of what drives results in Formula 1 across the 2010–2024 seasons — regression, correlation, and visual storytelling.',
     tags: ['Regression', 'Data Viz'],
   },
   {
     num: '03',
     href: 'https://github.com/correleotion/Data-Visualization-Using-Python-Project',
     lang: 'Python · Viz',
-    titleKey: 'p3Title',
-    descKey: 'p3Desc',
+    title: 'Data Visualization Project',
+    desc: "A study in turning raw datasets into clear, honest visuals — exploring chart design, distributions, and narrative with Python's plotting stack.",
     tags: ['Matplotlib', 'Pandas'],
   },
   {
     num: '04',
     href: 'https://github.com/correleotion/MP-Asset-Scanner',
     lang: 'Python · Tool',
-    titleKey: 'p4Title',
-    descKey: 'p4Desc',
+    title: 'MP Asset Scanner',
+    desc: 'A Python utility that scans and inventories assets automatically — built to replace a slow, manual process with a repeatable script.',
     tags: ['Automation', 'CLI'],
   },
   {
     num: '05',
     href: 'https://github.com/correleotion/unbuy',
     lang: 'TypeScript',
-    titleKey: 'p5Title',
-    descKey: 'p5Desc',
+    title: 'unbuy',
+    desc: 'A TypeScript web app exploring product and interface ideas — a change of pace from notebooks, into shipping something interactive.',
     tags: ['TypeScript', 'Web'],
   },
 ];
@@ -41,19 +40,23 @@ const projects = [
   <div class="section__head section__head--split">
     <div class="section__head-group">
       <span class="section__num">02</span>
-      <h2 class="section__title" data-i18n="workH">Selected Projects</h2>
+      <h2 class="section__title">Selected Projects</h2>
     </div>
-    <a href="https://github.com/correleotion?tab=repositories" class="link-muted" data-i18n="allRepos">all repos ↗</a>
+    <a href="https://github.com/correleotion?tab=repositories" class="link-muted">all repos ↗</a>
   </div>
 
   <!-- featured -->
   <a href="https://github.com/correleotion/Durian-Leaf-Disease-Classification" class="card-featured">
     <div class="card-featured__head">
-      <span class="card-featured__tag" data-i18n="featured">★ FEATURED</span>
+      <span class="card-featured__tag">★ FEATURED</span>
       <span class="card-featured__lang">Jupyter / PyTorch</span>
     </div>
-    <h3 class="card-featured__title" data-i18n="featTitle"></h3>
-    <p class="card-featured__desc" data-i18n="featDesc"></p>
+    <h3 class="card-featured__title">Durian Leaf Disease Classification</h3>
+    <p class="card-featured__desc">
+      A deep-learning image classifier that identifies durian leaf diseases from photos — built to
+      support early detection for growers. Covers the full loop: dataset curation, augmentation,
+      CNN training, and evaluation in a reproducible notebook.
+    </p>
     <div class="tag-row">
       <span class="tag--invert">Computer Vision</span>
       <span class="tag--invert">CNN</span>
@@ -70,8 +73,8 @@ const projects = [
             <span class="card__num">{p.num}</span>
             <span class="card__lang">{p.lang}</span>
           </div>
-          <h3 class="card__title" data-i18n={p.titleKey} />
-          <p class="card__desc" data-i18n={p.descKey} />
+          <h3 class="card__title">{p.title}</h3>
+          <p class="card__desc">{p.desc}</p>
           <div class="tag-row">
             {p.tags.map((t) => (
               <span class="tag">{t}</span>

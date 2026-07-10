@@ -27,19 +27,18 @@ src/
     └── fonts.css          # @font-face for the self-hosted IBM Plex fonts
 public/
 ├── fonts/                 # IBM Plex Mono / Sans / Sans Thai (woff2 subsets)
-├── js/
-│   ├── i18n.js            # ← English + Thai text lives here
-│   └── main.js            # language + theme toggles (localStorage persistence)
+├── img/                   # images (TU logo, portrait, ...)
+├── js/main.js             # theme toggle (localStorage persistence)
 └── CNAME                  # custom domain for GitHub Pages
 ```
 
 ## Editing content
 
-- **Text (EN/TH)**: edit `public/js/i18n.js` — every element with a
-  `data-i18n="key"` attribute gets its text from those dictionaries at runtime.
-- **Section markup**: edit the matching file in `src/components/`.
-  `Work.astro`, `Stack.astro`, and `Writing.astro` are data-driven — edit the
-  array at the top of the file instead of duplicating markup.
+- **All content lives in the component files** — edit the matching file in
+  `src/components/` (e.g. education text in `Education.astro`).
+  `Work.astro`, `Stack.astro`, `Awards.astro`, `Writing.astro`, and
+  `MetaStrip.astro` are data-driven — edit the array at the top of the file
+  instead of duplicating markup.
 - **Section order**: edit `src/pages/index.astro`.
 - **Theme colours**: CSS variables in `src/styles/styles.css` — `:root` for
   light, `html[data-theme="dark"]` for dark. Accent variants:
