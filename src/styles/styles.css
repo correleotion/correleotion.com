@@ -62,6 +62,9 @@ html[data-theme="dark"] {
   --inv-faint: #56534f;
   --inv-line: #c9c8c2;
   --inv-body: #46433f;
+
+  /* monochrome accent must follow the ink color, or it vanishes on dark */
+  --accent: #f1f0ec;
 }
 
 html[data-accent="terminal"] { --accent: #2f9e44; }
@@ -165,6 +168,56 @@ body {
 
 /* ---- hero ---- */
 .hero { padding: 32px 0; }
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+/* mock terminal card (right side of the hero) */
+.terminal {
+  border: 1px solid var(--linex);
+  background: var(--card);
+  font-family: var(--mono);
+}
+.terminal__bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.terminal__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--faint);
+}
+.terminal__host {
+  margin-left: 8px;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--faint);
+}
+.terminal__body {
+  padding: 20px 18px 22px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.terminal__cmd { color: var(--fg); }
+.terminal__cmd::before { content: "$ "; color: var(--faint); }
+.terminal__out {
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.terminal__out::before { content: "→ "; color: var(--faint); }
+.cursor--sm {
+  width: 0.55em;
+  height: 0.95em;
+  margin-left: 0;
+  vertical-align: -0.12em;
+}
 .hero__coords {
   font-family: var(--mono);
   font-size: 12px;
@@ -243,7 +296,7 @@ body {
   align-items: center;
   gap: 8px;
 }
-.btn-primary .arrow { color: var(--accent); }
+.btn-primary .arrow { color: var(--inv-fg); }
 .btn-outline {
   font-family: var(--mono);
   font-size: 13px;
@@ -421,7 +474,7 @@ html[data-theme="dark"] .exp-logo { filter: invert(1); }
 .card-featured__tag {
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--accent);
+  color: var(--inv-fg);
   letter-spacing: 0.08em;
 }
 .card-featured__lang {
@@ -683,6 +736,11 @@ html[data-theme="dark"] .stack-item img { filter: invert(1); }
 }
 
 /* ---- responsive ---- */
+@media (max-width: 960px) {
+  .hero__grid { grid-template-columns: 1fr; }
+  .hero__side { display: none; }
+}
+
 @media (max-width: 860px) {
   .nav__links { gap: 14px; }
   .about__grid { grid-template-columns: 1fr; gap: 32px; }
