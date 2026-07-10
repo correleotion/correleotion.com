@@ -35,10 +35,11 @@
   "use strict";
 
   var STOP_DELAY = 1000;      // ms of stillness before snapping
-  var SNAP_RANGE = 0.35;      // only snap when within 35% of viewport height
+  var SNAP_RANGE = 0.5;       // only snap when within 50% of viewport height
   var NAV_OFFSET = 70;        // matches scroll-margin-top on .section
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  // reduced-motion users still get the snap, just without the animation
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var timer = null;
   var snapping = false;
@@ -67,7 +68,7 @@
     if (bestDist > window.innerHeight * SNAP_RANGE) return;    // mid-section: don't yank
 
     snapping = true;
-    window.scrollTo({ top: best, behavior: "smooth" });
+    window.scrollTo({ top: best, behavior: reduceMotion ? "auto" : "smooth" });
     setTimeout(function () { snapping = false; }, 800);
   }
 
