@@ -1,10 +1,45 @@
 ---
 // Tech stack columns — edit this array to change the grid.
+// Icons are monochrome SVGs in public/img/stack/ (dark mode inverts them via CSS).
 const columns = [
-  { label: 'LANGUAGES', items: ['Python', 'TypeScript', 'SQL', 'R'] },
-  { label: 'ML / AI', items: ['PyTorch', 'scikit-learn', 'CNNs', 'Computer Vision'] },
-  { label: 'DATA', items: ['Pandas / NumPy', 'Matplotlib', 'Seaborn', 'Jupyter'] },
-  { label: 'TOOLS', items: ['Git / GitHub', 'VS Code', 'Linux', 'Notebooks'] },
+  {
+    label: 'LANGUAGES',
+    items: [
+      { name: 'Python', icon: 'python' },
+      { name: 'TypeScript', icon: 'typescript' },
+      { name: 'SQL', icon: 'database' },
+      { name: 'R', icon: 'r' },
+    ],
+  },
+  {
+    label: 'ML / AI',
+    items: [
+      { name: 'PyTorch', icon: 'pytorch' },
+      { name: 'scikit-learn', icon: 'scikitlearn' },
+      { name: 'CNNs', icon: 'network' },
+      { name: 'Computer Vision', icon: 'eye' },
+    ],
+  },
+  {
+    label: 'DATA',
+    items: [
+      { name: 'Pandas', icon: 'pandas' },
+      { name: 'NumPy', icon: 'numpy' },
+      { name: 'Matplotlib', icon: 'matplotlib' },
+      { name: 'Seaborn', icon: 'seaborn' },
+      { name: 'Jupyter', icon: 'jupyter' },
+    ],
+  },
+  {
+    label: 'TOOLS',
+    items: [
+      { name: 'Git', icon: 'git' },
+      { name: 'GitHub', icon: 'github' },
+      { name: 'VS Code', icon: 'vscode' },
+      { name: 'Linux', icon: 'linux' },
+      { name: 'Notebooks', icon: 'notebook' },
+    ],
+  },
 ];
 ---
 
@@ -18,7 +53,14 @@ const columns = [
       columns.map((col) => (
         <div class="stack-cell">
           <div class="stack-cell__label">{col.label}</div>
-          <div class="stack-cell__items" set:html={col.items.join('<br>')} />
+          <div class="stack-cell__items">
+            {col.items.map((item) => (
+              <div class="stack-item">
+                <img src={`/img/stack/${item.icon}.svg`} alt="" width="15" height="15" loading="lazy" />
+                <span>{item.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       ))
     }
