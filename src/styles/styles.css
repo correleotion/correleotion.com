@@ -370,6 +370,18 @@ body {
   font-size: 9px;
 }
 
+/* real images dropped into the old placeholder slots */
+.edu-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 4px;
+  display: block;
+}
+
 /* ---- work ---- */
 .card-featured {
   text-decoration: none;
