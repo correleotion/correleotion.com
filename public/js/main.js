@@ -34,7 +34,7 @@
 (function () {
   "use strict";
 
-  var STOP_DELAY = 1000;      // ms of stillness before snapping
+  var STOP_DELAY = 3000;      // ms of stillness before snapping
   var SNAP_RANGE = 0.5;       // only snap when within 50% of viewport height
   var NAV_OFFSET = 70;        // matches scroll-margin-top on .section
 
