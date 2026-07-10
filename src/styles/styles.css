@@ -372,13 +372,12 @@ body {
 
 /* real images dropped into the old placeholder slots */
 .edu-logo {
-  width: 52px;
-  height: 52px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   object-fit: contain;
-  border: 1px solid var(--line);
   background: #fff;
-  padding: 4px;
+  padding: 2px;
   display: block;
 }
 
