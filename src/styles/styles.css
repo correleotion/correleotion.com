@@ -298,11 +298,11 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid var(--linex);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--linex);
 }
 .meta-cell {
   padding: 22px 20px 24px;
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--linex);
 }
 .meta-cell:last-child { border-right: none; }
 .meta-cell__label {
