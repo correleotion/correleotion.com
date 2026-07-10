@@ -175,48 +175,19 @@ body {
   align-items: center;
 }
 
-/* mock terminal card (right side of the hero) */
-.terminal {
-  border: 1px solid var(--linex);
-  background: var(--card);
+/* generative scatter + regression line (right side of the hero) */
+.hero-art { margin: 0; }
+.hero-art canvas {
+  width: 100%;
+  height: 380px;
+  display: block;
+}
+.hero-art__caption {
+  margin-top: 12px;
   font-family: var(--mono);
-}
-.terminal__bar {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--line);
-}
-.terminal__dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  border: 1px solid var(--faint);
-}
-.terminal__host {
-  margin-left: 8px;
   font-size: 11px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--faint);
-}
-.terminal__body {
-  padding: 20px 18px 22px;
-  font-size: 13px;
-  line-height: 1.7;
-}
-.terminal__cmd { color: var(--fg); }
-.terminal__cmd::before { content: "$ "; color: var(--faint); }
-.terminal__out {
-  color: var(--muted);
-  margin: 0 0 14px;
-}
-.terminal__out::before { content: "→ "; color: var(--faint); }
-.cursor--sm {
-  width: 0.55em;
-  height: 0.95em;
-  margin-left: 0;
-  vertical-align: -0.12em;
 }
 .hero__coords {
   font-family: var(--mono);

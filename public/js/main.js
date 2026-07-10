@@ -120,3 +120,139 @@
     history.pushState(null, "", "#" + id);
   });
 })();
+
+/* Hero art: drifting scatter points with a live least-squares fit line.
+   Monochrome, theme-aware, pauses off-screen, static under reduced motion. */
+(function () {
+  "use strict";
+
+  var canvas = document.getElementById("hero-canvas");
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext("2d");
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // point cloud: fixed bases along a downward trend, gently wobbling
+  var N = 64;
+  var pts = [];
+  (function seed() {
+    // deterministic-ish spread using a simple LCG so reloads look similar
+    var s = 42;
+    function rnd() { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; }
+    for (var i = 0; i < N; i++) {
+      var bx = 0.06 + 0.88 * rnd();
+      var by = 0.78 - 0.52 * bx + (rnd() - 0.5) * 0.28;
+      pts.push({
+        bx: bx,
+        by: Math.min(0.92, Math.max(0.08, by)),
+        ax: 0.008 + 0.014 * rnd(),
+        ay: 0.008 + 0.014 * rnd(),
+        wx: 0.4 + 1.1 * rnd(),
+        wy: 0.4 + 1.1 * rnd(),
+        px: rnd() * Math.PI * 2,
+        py: rnd() * Math.PI * 2,
+        r: 1.4 + rnd() * 1.3,
+      });
+    }
+  })();
+
+  var colors = {};
+  function readColors() {
+    var cs = getComputedStyle(document.documentElement);
+    colors.fg = cs.getPropertyValue("--fg").trim() || "#14110f";
+    colors.line = cs.getPropertyValue("--line").trim() || "#d9d8d3";
+    colors.accent = cs.getPropertyValue("--accent").trim() || "#14110f";
+  }
+  readColors();
+  new MutationObserver(readColors).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme", "data-accent"],
+  });
+
+  var W = 0, H = 0;
+  function resize() {
+    var dpr = window.devicePixelRatio || 1;
+    W = canvas.clientWidth;
+    H = canvas.clientHeight;
+    if (!W || !H) return;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", function () { resize(); if (reduceMotion) draw(0); });
+
+  var PAD = 26;
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+
+    // axes
+    ctx.strokeStyle = colors.line;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(PAD, 8);
+    ctx.lineTo(PAD, H - PAD);
+    ctx.lineTo(W - 8, H - PAD);
+    ctx.stroke();
+    // ticks
+    ctx.beginPath();
+    for (var i = 1; i <= 4; i++) {
+      var ty = 8 + (H - PAD - 8) * (i / 4);
+      ctx.moveTo(PAD - 4, ty); ctx.lineTo(PAD, ty);
+      var tx = PAD + (W - 8 - PAD) * (i / 4);
+      ctx.moveTo(tx, H - PAD); ctx.lineTo(tx, H - PAD + 4);
+    }
+    ctx.stroke();
+
+    // points + running sums for the fit
+    var sx = 0, sy = 0, sxx = 0, sxy = 0;
+    ctx.fillStyle = colors.fg;
+    for (var j = 0; j < N; j++) {
+      var p = pts[j];
+      var x = p.bx + p.ax * Math.sin(t * 0.001 * p.wx + p.px);
+      var y = p.by + p.ay * Math.sin(t * 0.001 * p.wy + p.py);
+      sx += x; sy += y; sxx += x * x; sxy += x * y;
+      var cx = PAD + x * (W - 8 - PAD);
+      var cy = 8 + y * (H - PAD - 8);
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // least-squares fit across the visible x range
+    var mx = sx / N, my = sy / N;
+    var slope = (sxy - N * mx * my) / (sxx - N * mx * mx);
+    var icept = my - slope * mx;
+    var x0 = 0.03, x1 = 0.97;
+    ctx.strokeStyle = colors.accent;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(PAD + x0 * (W - 8 - PAD), 8 + (icept + slope * x0) * (H - PAD - 8));
+    ctx.lineTo(PAD + x1 * (W - 8 - PAD), 8 + (icept + slope * x1) * (H - PAD - 8));
+    ctx.stroke();
+  }
+
+  var running = false;
+  function loop(ts) {
+    if (!running) return;
+    draw(ts);
+    requestAnimationFrame(loop);
+  }
+  function start() { if (!running) { running = true; requestAnimationFrame(loop); } }
+  function stop() { running = false; }
+
+  resize();
+  if (reduceMotion) {
+    draw(0); // calm single frame
+  } else {
+    // animate only while the hero is on screen
+    new IntersectionObserver(function (entries) {
+      entries[0].isIntersecting ? start() : stop();
+    }).observe(canvas);
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (reduceMotion) return;
+    document.hidden ? stop() : start();
+  });
+})();
