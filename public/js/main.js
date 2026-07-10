@@ -48,9 +48,10 @@
   }
 
   // hand-rolled animation: consistent easing everywhere, cancels on user input
-  function animateTo(target) {
+  function animateTo(target, duration) {
     var start = window.scrollY;
     var dist = target - start;
+    duration = duration || SNAP_DURATION;
     var t0 = null;
     var cancelled = false;
 
@@ -62,7 +63,7 @@
     function step(ts) {
       if (cancelled) { snapping = false; return; }
       if (t0 === null) t0 = ts;
-      var p = Math.min(1, (ts - t0) / SNAP_DURATION);
+      var p = Math.min(1, (ts - t0) / duration);
       window.scrollTo(0, start + dist * easeInOutCubic(p));
       if (p < 1) requestAnimationFrame(step);
       else setTimeout(function () { snapping = false; }, 50);
@@ -101,4 +102,21 @@
     clearTimeout(timer);
     timer = setTimeout(onScrollStop, STOP_DELAY);
   }, { passive: true });
+
+  // in-page anchor links (nav, "View work") glide with the same easing
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute("href").slice(1);
+    if (!id) return; // bare "#" placeholders keep default behavior
+    var el = document.getElementById(id);
+    if (!el) return;
+    e.preventDefault();
+    clearTimeout(timer); // don't let the idle snap fight this scroll
+    var target = Math.max(0, el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET);
+    var dist = Math.abs(target - window.scrollY);
+    // longer trips get a bit more time, capped so it never drags
+    animateTo(target, Math.min(1100, Math.max(500, dist * 0.3)));
+    history.pushState(null, "", "#" + id);
+  });
 })();
