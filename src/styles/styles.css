@@ -390,6 +390,7 @@ body {
 /* real images dropped into the old placeholder slots */
 .edu-logo {
   width: 100%; /* fill the date column, like the experience logos */
+  max-width: 160px; /* mobile stacks to one column — don't balloon */
   height: auto;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
@@ -400,6 +401,7 @@ body {
 }
 .exp-logo {
   width: 100%;
+  max-width: 160px; /* mobile stacks to one column — don't balloon */
   height: auto; /* keep the image's own aspect ratio at column width */
   display: block;
   opacity: 0.9;
