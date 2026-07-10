@@ -256,3 +256,13 @@
     document.hidden ? stop() : start();
   });
 })();
+
+/* Contact form: returning from FormSubmit with ?sent=1 shows the thank-you note. */
+(function () {
+  "use strict";
+  if (new URLSearchParams(location.search).get("sent") !== "1") return;
+  var note = document.querySelector('[data-role="form-sent"]');
+  if (note) note.hidden = false;
+  // clean the query string but keep the #contact anchor position
+  history.replaceState(null, "", location.pathname + location.hash);
+})();

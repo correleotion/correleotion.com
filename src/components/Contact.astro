@@ -33,21 +33,53 @@ const socials = [
     <span class="section__num">08</span>
     <h2 class="section__title">Contact</h2>
   </div>
-  <h3 class="contact__title">
-    <span>Let's build something</span><br /><span>worth shipping.</span>
-  </h3>
-  <a href="mailto:thanakorn.sinon@gmail.com" class="contact__email">thanakorn.sinon@gmail.com</a>
 
-  <div class="social">
-    {
-      socials.map((s) => (
-        <a href={s.href} class="social__link">
-          <svg viewBox="0 0 24 24" width={s.size} height={s.size} fill="currentColor" aria-hidden="true">
-            <path d={s.path} />
-          </svg>
-          {s.label}
-        </a>
-      ))
-    }
+  <div class="contact__grid">
+    <div>
+      <h3 class="contact__title">
+        <span>Let's build something</span><br /><span>worth shipping.</span>
+      </h3>
+      <a href="mailto:thanakorn.sinon@gmail.com" class="contact__email">thanakorn.sinon@gmail.com</a>
+
+      <div class="social">
+        {
+          socials.map((s) => (
+            <a href={s.href} class="social__link">
+              <svg viewBox="0 0 24 24" width={s.size} height={s.size} fill="currentColor" aria-hidden="true">
+                <path d={s.path} />
+              </svg>
+              {s.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <form
+      class="contact-form"
+      action="https://formsubmit.co/thanakorn.sinon@gmail.com"
+      method="POST"
+    >
+      <input type="hidden" name="_subject" value="New message from correleotion.com" />
+      <input type="hidden" name="_next" value="https://correleotion.com/?sent=1#contact" />
+      <input type="text" name="_honey" style="display: none" tabindex="-1" autocomplete="off" />
+
+      <div class="contact-form__sent" data-role="form-sent" hidden>
+        ✓ Message sent — I'll get back to you soon.
+      </div>
+
+      <label class="contact-form__label" for="cf-name">NAME</label>
+      <input class="contact-form__input" id="cf-name" type="text" name="name" required maxlength="100" placeholder="Your name" />
+
+      <label class="contact-form__label" for="cf-email">EMAIL</label>
+      <input class="contact-form__input" id="cf-email" type="email" name="email" required maxlength="200" placeholder="you@example.com" />
+
+      <label class="contact-form__label" for="cf-message">MESSAGE</label>
+      <textarea class="contact-form__input contact-form__textarea" id="cf-message" name="message" required maxlength="3000" rows="5" placeholder="What would you like to build?"></textarea>
+
+      <button type="submit" class="btn-primary contact-form__submit">
+        Send message <span class="arrow">→</span>
+      </button>
+    </form>
   </div>
 </section>
