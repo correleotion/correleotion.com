@@ -514,6 +514,18 @@ body {
   font-size: 14px;
   line-height: 2.05;
 }
+.stack-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.stack-item img {
+  width: 15px;
+  height: 15px;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+html[data-theme="dark"] .stack-item img { filter: invert(1); }
 
 /* ---- timeline (experience / education / awards) ---- */
 .timeline { border-top: 1px solid var(--linex); }
