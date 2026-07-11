@@ -390,7 +390,7 @@ body {
 /* real images dropped into the old placeholder slots */
 .edu-logo {
   width: 100%;
-  max-width: 140px; /* matches the "Aug 2024 — Present" text width */
+  max-width: 150px;
   height: auto;
   aspect-ratio: 1 / 1;
   display: block;
@@ -399,7 +399,7 @@ body {
 html[data-theme="dark"] .edu-logo { filter: invert(1); }
 .exp-logo {
   width: 100%;
-  max-width: 140px; /* same width as the date text, like the TU seal */
+  max-width: 150px;
   height: auto; /* keep the image's own aspect ratio at column width */
   display: block;
   opacity: 0.9;
