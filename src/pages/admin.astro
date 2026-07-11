@@ -1,0 +1,363 @@
+---
+import '../styles/fonts.css';
+import '../styles/styles.css';
+import '../styles/admin.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>admin — correleotion</title>
+
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t) document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script is:inline src="/js/supabase-config.js"></script>
+  </head>
+  <body>
+    <div class="admin">
+      <!-- login -->
+      <div id="login-view" hidden>
+        <form class="login" id="login-form">
+          <h1 class="login__title">● correleotion / admin</h1>
+          <div class="login__error" id="login-error" hidden></div>
+          <label class="contact-form__label" for="lg-email">EMAIL</label>
+          <input class="contact-form__input" id="lg-email" type="email" autocomplete="username" required />
+          <label class="contact-form__label" for="lg-pass">PASSWORD</label>
+          <input class="contact-form__input" id="lg-pass" type="password" autocomplete="current-password" required />
+          <button type="submit" class="btn-primary contact-form__submit">Sign in →</button>
+          <p class="login__note" id="login-note" hidden>
+            Supabase is not configured yet — fill in <code>public/js/supabase-config.js</code>.
+          </p>
+        </form>
+      </div>
+
+      <!-- dashboard -->
+      <div id="dash-view" hidden>
+        <div class="admin__head">
+          <h1 class="admin__title">● Analytics</h1>
+          <div class="admin__meta">
+            <span id="dash-updated"></span>
+            <button type="button" class="btn-ghost" id="btn-refresh">REFRESH</button>
+            <button type="button" class="btn-ghost" id="btn-logout">LOGOUT</button>
+          </div>
+        </div>
+
+        <div class="filters" id="range-filters" role="group" aria-label="Time range">
+          <button type="button" class="btn-ghost" data-days="7">7D</button>
+          <button type="button" class="btn-ghost" data-days="14" aria-pressed="true">14D</button>
+          <button type="button" class="btn-ghost" data-days="30">30D</button>
+          <button type="button" class="btn-ghost" data-days="90">90D</button>
+        </div>
+
+        <div class="tiles">
+          <div class="tile">
+            <div class="tile__label">VISITORS</div>
+            <div class="tile__value" id="t-visitors">–</div>
+            <div class="tile__sub">unique in range</div>
+          </div>
+          <div class="tile">
+            <div class="tile__label">PAGEVIEWS</div>
+            <div class="tile__value" id="t-views">–</div>
+            <div class="tile__sub" id="t-views-today">– today</div>
+          </div>
+          <div class="tile">
+            <div class="tile__label">CLICKS</div>
+            <div class="tile__value" id="t-clicks">–</div>
+            <div class="tile__sub">links &amp; buttons</div>
+          </div>
+          <div class="tile">
+            <div class="tile__label">COPIES</div>
+            <div class="tile__value" id="t-copies">–</div>
+            <div class="tile__sub">text copied</div>
+          </div>
+          <div class="tile">
+            <div class="tile__label">CV OPENS</div>
+            <div class="tile__value" id="t-cv">–</div>
+            <div class="tile__sub">resume clicks</div>
+          </div>
+        </div>
+
+        <div class="panel-grid">
+          <div class="panel panel--wide">
+            <h2 class="panel__title">Pageviews per day</h2>
+            <div class="chart-wrap">
+              <canvas id="line-chart"></canvas>
+              <div class="chart-tip" id="line-tip"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2 class="panel__title">Top clicked</h2>
+            <div class="bars" id="bars-clicks"></div>
+          </div>
+          <div class="panel">
+            <h2 class="panel__title">Sections seen</h2>
+            <div class="bars" id="bars-sections"></div>
+          </div>
+
+          <div class="panel panel--wide">
+            <h2 class="panel__title">Recently copied text</h2>
+            <div class="etable-wrap">
+              <table class="etable" id="copies-table">
+                <thead><tr><th>When</th><th>Text</th><th>Visitor</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel panel--wide">
+            <h2 class="panel__title">Recent events</h2>
+            <div class="etable-wrap">
+              <table class="etable" id="events-table">
+                <thead><tr><th>When</th><th>Type</th><th>Detail</th><th>Visitor</th><th>Device</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+      const cfg = window.SUPABASE_CFG || {};
+      const $ = (id) => document.getElementById(id);
+      const loginView = $('login-view');
+      const dashView = $('dash-view');
+
+      if (!cfg.url || !cfg.anonKey) {
+        loginView.hidden = false;
+        $('login-note').hidden = false;
+        $('login-form').querySelector('button').disabled = true;
+      } else {
+        const supa = createClient(cfg.url, cfg.anonKey);
+        let allRows = [];
+        let rangeDays = 14;
+
+        // ---------- auth ----------
+        const { data: { session } } = await supa.auth.getSession();
+        if (session) enter(); else loginView.hidden = false;
+
+        $('login-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const err = $('login-error');
+          err.hidden = true;
+          const { error } = await supa.auth.signInWithPassword({
+            email: $('lg-email').value.trim(),
+            password: $('lg-pass').value,
+          });
+          if (error) { err.textContent = error.message; err.hidden = false; return; }
+          enter();
+        });
+
+        $('btn-logout').addEventListener('click', async () => {
+          await supa.auth.signOut();
+          location.reload();
+        });
+        $('btn-refresh').addEventListener('click', load);
+
+        document.querySelectorAll('#range-filters [data-days]').forEach((b) => {
+          b.addEventListener('click', () => {
+            rangeDays = +b.dataset.days;
+            document.querySelectorAll('#range-filters [data-days]').forEach((x) =>
+              x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+            render();
+          });
+        });
+
+        async function enter() {
+          loginView.hidden = true;
+          dashView.hidden = false;
+          await load();
+        }
+
+        // ---------- data ----------
+        async function load() {
+          const since = new Date(Date.now() - 90 * 864e5).toISOString();
+          const { data, error } = await supa
+            .from('events')
+            .select('*')
+            .gte('created_at', since)
+            .order('created_at', { ascending: false })
+            .limit(10000);
+          if (error) { alert('Load failed: ' + error.message); return; }
+          allRows = data || [];
+          $('dash-updated').textContent = 'updated ' + new Date().toLocaleTimeString();
+          render();
+        }
+
+        // ---------- aggregation + render ----------
+        const dayKey = (d) => {
+          const x = new Date(d);
+          return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+        };
+        const fmt = (n) => n.toLocaleString();
+        const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
+          ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const device = (ua) => /mobile|iphone|android/i.test(ua || '') ? 'mobile' : 'desktop';
+
+        function render() {
+          const cutoff = Date.now() - rangeDays * 864e5;
+          const rows = allRows.filter((r) => new Date(r.created_at).getTime() >= cutoff);
+          const views = rows.filter((r) => r.type === 'pageview');
+          const clicks = rows.filter((r) => r.type === 'click');
+          const copies = rows.filter((r) => r.type === 'copy');
+          const sects = rows.filter((r) => r.type === 'section_view');
+          const today = dayKey(new Date());
+
+          $('t-visitors').textContent = fmt(new Set(views.map((r) => r.visitor_id)).size);
+          $('t-views').textContent = fmt(views.length);
+          $('t-views-today').textContent = fmt(views.filter((r) => dayKey(r.created_at) === today).length) + ' today';
+          $('t-clicks').textContent = fmt(clicks.length);
+          $('t-copies').textContent = fmt(copies.length);
+          $('t-cv').textContent = fmt(clicks.filter((r) => (r.data?.href || '').includes('resume')).length);
+
+          drawLine(views);
+          drawBars('bars-clicks', tally(clicks, (r) => r.data?.text || r.data?.href || '(unknown)'));
+          drawBars('bars-sections', tally(sects, (r) => r.data?.section || '(unknown)'));
+          fillCopies(copies.slice(0, 20));
+          fillEvents(rows.slice(0, 60));
+        }
+
+        function tally(rows, keyFn) {
+          const m = new Map();
+          rows.forEach((r) => { const k = keyFn(r); m.set(k, (m.get(k) || 0) + 1); });
+          return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+        }
+
+        function drawBars(elId, entries) {
+          const el = $(elId);
+          if (!entries.length) { el.innerHTML = '<div class="empty-note">no data yet</div>'; return; }
+          const max = entries[0][1];
+          el.innerHTML = entries.map(([label, n]) => `
+            <div class="bar-row" title="${esc(label)} — ${n}">
+              <span class="bar-row__label">${esc(label)}</span>
+              <span class="bar-row__track"><span class="bar-row__fill" style="width:${(n / max) * 100}%"></span></span>
+              <span class="bar-row__count">${fmt(n)}</span>
+            </div>`).join('');
+        }
+
+        // ---------- line chart (canvas, crosshair tooltip) ----------
+        let lineDays = [];
+        function drawLine(views) {
+          const canvas = $('line-chart');
+          const ctx = canvas.getContext('2d');
+          const dpr = window.devicePixelRatio || 1;
+          const W = canvas.clientWidth, H = canvas.clientHeight;
+          canvas.width = W * dpr; canvas.height = H * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, W, H);
+
+          const cs = getComputedStyle(document.documentElement);
+          const ink = cs.getPropertyValue('--fg').trim();
+          const grid = cs.getPropertyValue('--line').trim();
+          const faint = cs.getPropertyValue('--faint').trim();
+
+          const byDay = new Map();
+          views.forEach((r) => { const k = dayKey(r.created_at); byDay.set(k, (byDay.get(k) || 0) + 1); });
+          lineDays = [];
+          for (let i = rangeDays - 1; i >= 0; i--) {
+            const d = new Date(Date.now() - i * 864e5);
+            const k = dayKey(d);
+            lineDays.push({ key: k, label: (d.getMonth() + 1) + '/' + d.getDate(), n: byDay.get(k) || 0 });
+          }
+          const PAD = { l: 34, r: 14, t: 12, b: 24 };
+          const max = Math.max(4, ...lineDays.map((d) => d.n));
+          const x = (i) => PAD.l + (i / (lineDays.length - 1)) * (W - PAD.l - PAD.r);
+          const y = (n) => PAD.t + (1 - n / max) * (H - PAD.t - PAD.b);
+
+          // recessive grid: 3 horizontal lines + y labels
+          ctx.strokeStyle = grid; ctx.fillStyle = faint;
+          ctx.font = '10px "IBM Plex Mono", monospace';
+          ctx.lineWidth = 1;
+          [0, 0.5, 1].forEach((f) => {
+            const v = Math.round(max * f);
+            ctx.beginPath(); ctx.moveTo(PAD.l, y(v)); ctx.lineTo(W - PAD.r, y(v)); ctx.stroke();
+            ctx.fillText(String(v), 6, y(v) + 3);
+          });
+          // x labels: first / middle / last
+          [0, Math.floor(lineDays.length / 2), lineDays.length - 1].forEach((i) => {
+            ctx.fillText(lineDays[i].label, x(i) - 10, H - 8);
+          });
+
+          // the series: 2px ink line
+          ctx.strokeStyle = ink; ctx.lineWidth = 2;
+          ctx.beginPath();
+          lineDays.forEach((d, i) => { i ? ctx.lineTo(x(i), y(d.n)) : ctx.moveTo(x(i), y(d.n)); });
+          ctx.stroke();
+
+          // direct label on the latest point only
+          const last = lineDays[lineDays.length - 1];
+          ctx.fillStyle = ink;
+          ctx.beginPath(); ctx.arc(x(lineDays.length - 1), y(last.n), 3, 0, Math.PI * 2); ctx.fill();
+          ctx.font = '600 11px "IBM Plex Mono", monospace';
+          ctx.fillText(String(last.n), x(lineDays.length - 1) - 14, y(last.n) - 8);
+
+          // crosshair + tooltip
+          const tip = $('line-tip');
+          canvas.onmousemove = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const i = Math.round(((mx - PAD.l) / (W - PAD.l - PAD.r)) * (lineDays.length - 1));
+            if (i < 0 || i >= lineDays.length) { tip.style.display = 'none'; return; }
+            tip.style.display = 'block';
+            tip.style.left = x(i) + 'px';
+            tip.style.top = y(lineDays[i].n) + 'px';
+            tip.textContent = lineDays[i].label + ' · ' + lineDays[i].n + ' views';
+          };
+          canvas.onmouseleave = () => { tip.style.display = 'none'; };
+        }
+
+        // ---------- tables ----------
+        const vid = (r) => (r.visitor_id || '').slice(-6);
+        const when = (r) => new Date(r.created_at).toLocaleString(undefined,
+          { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+        function fillCopies(rows) {
+          const tb = $('copies-table').querySelector('tbody');
+          tb.innerHTML = rows.length
+            ? rows.map((r) => `<tr>
+                <td class="t-time">${when(r)}</td>
+                <td class="t-detail">“${esc(r.data?.text)}”</td>
+                <td>${esc(vid(r))}</td>
+              </tr>`).join('')
+            : '<tr><td colspan="3"><div class="empty-note">nothing copied yet</div></td></tr>';
+        }
+
+        function detail(r) {
+          if (r.type === 'pageview') return esc(r.path) + (r.referrer ? ' ← ' + esc(r.referrer) : '');
+          if (r.type === 'click') return esc(r.data?.text || '') + (r.data?.href ? ' → ' + esc(r.data.href) : '');
+          if (r.type === 'copy') return '“' + esc(r.data?.text) + '”';
+          if (r.type === 'section_view') return '#' + esc(r.data?.section);
+          return '';
+        }
+
+        function fillEvents(rows) {
+          const tb = $('events-table').querySelector('tbody');
+          tb.innerHTML = rows.length
+            ? rows.map((r) => `<tr>
+                <td class="t-time">${when(r)}</td>
+                <td class="t-type"><span class="badge badge--${r.type}">${r.type}</span></td>
+                <td class="t-detail">${detail(r)}</td>
+                <td>${esc(vid(r))}</td>
+                <td>${device(r.ua)} · ${esc(r.lang || '')}</td>
+              </tr>`).join('')
+            : '<tr><td colspan="5"><div class="empty-note">no events yet — visit the site to generate some</div></td></tr>';
+        }
+
+        window.addEventListener('resize', () => { if (!dashView.hidden) render(); });
+      }
+    </script>
+  </body>
+</html>

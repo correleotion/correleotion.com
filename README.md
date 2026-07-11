@@ -46,6 +46,16 @@ public/
 
 Push to `main` and the GitHub Actions workflow builds and deploys automatically.
 
+## Analytics (Supabase)
+
+- `public/js/tracker.js` logs pageviews, clicks, copies, and section views to a
+  Supabase `events` table (insert-only for anonymous visitors via RLS).
+- The dashboard lives at `/admin` (unlinked, noindex) — Supabase Auth login,
+  reads restricted by RLS to the owner's email.
+- Setup: create a Supabase project, run `supabase/schema.sql` in the SQL editor,
+  add your user in Authentication, then fill `public/js/supabase-config.js`
+  with the project URL + anon key.
+
 ## Images
 
 The two placeholders (`DROP A PORTRAIT` in `About.astro`, `TU logo` in
