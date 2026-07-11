@@ -399,7 +399,7 @@ body {
 html[data-theme="dark"] .edu-logo { filter: invert(1); }
 .exp-logo {
   width: 100%;
-  max-width: 160px; /* mobile stacks to one column — don't balloon */
+  max-width: 140px; /* same width as the date text, like the TU seal */
   height: auto; /* keep the image's own aspect ratio at column width */
   display: block;
   opacity: 0.9;
