@@ -52,6 +52,12 @@ import '../styles/admin.css';
           </div>
         </div>
 
+        <div class="admin__tabs">
+          <button type="button" class="btn-ghost" data-tab="analytics" aria-pressed="true">ANALYTICS</button>
+          <button type="button" class="btn-ghost" data-tab="content" aria-pressed="false">CONTENT</button>
+        </div>
+
+        <div id="view-analytics">
         <div class="filters" id="range-filters" role="group" aria-label="Time range">
           <button type="button" class="btn-ghost" data-days="1">1D</button>
           <button type="button" class="btn-ghost" data-days="7">1W</button>
@@ -131,6 +137,19 @@ import '../styles/admin.css';
               </table>
             </div>
           </div>
+        </div>
+        </div>
+
+        <!-- content editor -->
+        <div id="view-content" hidden>
+          <div class="cms-bar">
+            <span class="cms-hint">Edit any field, then save — the live site updates on the next page load. Empty edits fall back to the built-in text.</span>
+            <div class="cms-bar__actions">
+              <span id="cms-status" class="cms-status"></span>
+              <button type="button" class="btn-primary cms-save" id="cms-save">Save changes</button>
+            </div>
+          </div>
+          <div id="cms-groups"><div class="empty-note">loading fields…</div></div>
         </div>
       </div>
     </div>
@@ -389,6 +408,120 @@ import '../styles/admin.css';
         }
 
         window.addEventListener('resize', () => { if (!dashView.hidden) render(); });
+
+        // ================= content editor =================
+        const SECTION_NAMES = {
+          hero: 'Hero', 'meta-strip': 'Meta strip', about: '01 · About', education: '02 · Education',
+          experience: '03 · Experience', work: '04 · Projects', stack: '05 · Stack',
+          awards: '06 · Awards', writing: '07 · Writing', contact: '08 · Contact', footer: 'Footer',
+        };
+        let cmsLoaded = false;
+        let cmsOverrides = new Map();
+
+        document.querySelectorAll('[data-tab]').forEach((b) => {
+          b.addEventListener('click', () => {
+            document.querySelectorAll('[data-tab]').forEach((x) =>
+              x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+            const tab = b.dataset.tab;
+            $('view-analytics').hidden = tab !== 'analytics';
+            $('view-content').hidden = tab !== 'content';
+            if (tab === 'content' && !cmsLoaded) loadCms();
+          });
+        });
+
+        async function loadCms() {
+          cmsLoaded = true;
+          const groupsEl = $('cms-groups');
+          try {
+            const [pageRes, ovRes] = await Promise.all([
+              fetch('/', { cache: 'no-store' }),
+              supa.from('content').select('key,value'),
+            ]);
+            if (ovRes.error) throw new Error(ovRes.error.message +
+              ' — did you run supabase/content.sql?');
+            cmsOverrides = new Map((ovRes.data || []).map((r) => [r.key, r.value?.text ?? '']));
+
+            const doc = new DOMParser().parseFromString(await pageRes.text(), 'text/html');
+            const groups = new Map();
+            doc.querySelectorAll('[data-cms]').forEach((el) => {
+              const key = el.getAttribute('data-cms');
+              const sec = el.closest('section[id], .meta-strip, header.hero, footer, nav');
+              let g = 'misc';
+              if (sec) g = sec.id || (sec.classList.contains('hero') ? 'hero'
+                : sec.classList.contains('meta-strip') ? 'meta-strip'
+                : sec.tagName.toLowerCase());
+              const def = el.textContent.trim().replace(/\s+/g, ' ');
+              if (!groups.has(g)) groups.set(g, []);
+              groups.get(g).push({ key, def });
+            });
+
+            groupsEl.innerHTML = '';
+            groups.forEach((fields, g) => {
+              const panel = document.createElement('div');
+              panel.className = 'panel cms-group';
+              panel.innerHTML = '<h2 class="panel__title">' + esc(SECTION_NAMES[g] || g) + '</h2>';
+              fields.forEach((f) => {
+                const cur = cmsOverrides.has(f.key) ? cmsOverrides.get(f.key) : f.def;
+                const wrap = document.createElement('div');
+                wrap.className = 'cms-field';
+                const edited = cmsOverrides.has(f.key);
+                wrap.innerHTML =
+                  '<div class="cms-field__head">' +
+                    '<span class="cms-field__key">' + esc(f.key) + (edited ? ' <b class="cms-dot">●</b>' : '') + '</span>' +
+                    (edited ? '<button type="button" class="cms-revert" data-key="' + esc(f.key) + '">revert</button>' : '') +
+                  '</div>';
+                const ta = document.createElement('textarea');
+                ta.className = 'contact-form__input cms-input';
+                ta.rows = Math.min(6, Math.max(1, Math.ceil(cur.length / 80)));
+                ta.value = cur;
+                ta.dataset.key = f.key;
+                ta.dataset.def = f.def;
+                wrap.appendChild(ta);
+                panel.appendChild(wrap);
+              });
+              groupsEl.appendChild(panel);
+            });
+
+            groupsEl.querySelectorAll('.cms-revert').forEach((b) => {
+              b.addEventListener('click', async () => {
+                await supa.from('content').delete().eq('key', b.dataset.key);
+                cmsLoaded = false; loadCms();
+              });
+            });
+          } catch (e) {
+            groupsEl.innerHTML = '<div class="empty-note">Failed to load: ' + esc(e.message) + '</div>';
+            cmsLoaded = false;
+          }
+        }
+
+        $('cms-save').addEventListener('click', async () => {
+          const status = $('cms-status');
+          status.textContent = 'saving…';
+          const upserts = [];
+          const deletes = [];
+          document.querySelectorAll('.cms-input').forEach((ta) => {
+            const key = ta.dataset.key;
+            const cur = ta.value.trim();
+            const def = ta.dataset.def;
+            const ov = cmsOverrides.has(key) ? cmsOverrides.get(key) : null;
+            if (cur === def) { if (ov !== null) deletes.push(key); return; }
+            if (cur !== ov) upserts.push({ key, value: { text: cur }, updated_at: new Date().toISOString() });
+          });
+          try {
+            if (upserts.length) {
+              const { error } = await supa.from('content').upsert(upserts);
+              if (error) throw new Error(error.message);
+            }
+            if (deletes.length) {
+              const { error } = await supa.from('content').delete().in('key', deletes);
+              if (error) throw new Error(error.message);
+            }
+            status.textContent = '✓ saved (' + upserts.length + ' changed, ' + deletes.length + ' reverted)';
+            cmsLoaded = false; loadCms();
+          } catch (e) {
+            status.textContent = '✗ ' + e.message;
+          }
+        });
       }
     </script>
   </body>

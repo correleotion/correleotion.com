@@ -9,10 +9,10 @@ const cells = [
 
 <div class="meta-strip">
   {
-    cells.map((c) => (
+    cells.map((c, i) => (
       <div class="meta-cell">
-        <div class="meta-cell__label">{c.label}</div>
-        <div class="meta-cell__value">{c.value}</div>
+        <div class="meta-cell__label" data-cms={`meta.${i + 1}.label`}>{c.label}</div>
+        <div class="meta-cell__value" data-cms={`meta.${i + 1}.value`}>{c.value}</div>
       </div>
     ))
   }

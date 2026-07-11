@@ -40,19 +40,19 @@ const projects = [
   <div class="section__head section__head--split">
     <div class="section__head-group">
       <span class="section__num">04</span>
-      <h2 class="section__title">Selected Projects</h2>
+      <h2 class="section__title" data-cms="work.title">Selected Projects</h2>
     </div>
-    <a href="https://github.com/correleotion?tab=repositories" class="link-muted" data-track="all-repos">all repos ↗</a>
+    <a href="https://github.com/correleotion?tab=repositories" class="link-muted" data-track="all-repos" data-cms="work.allRepos">all repos ↗</a>
   </div>
 
   <!-- featured -->
   <a href="https://github.com/correleotion/Durian-Leaf-Disease-Classification" class="card-featured" data-track="project-durian-leaf">
     <div class="card-featured__head">
-      <span class="card-featured__tag">★ FEATURED</span>
-      <span class="card-featured__lang">Jupyter / PyTorch</span>
+      <span class="card-featured__tag" data-cms="work.feat.tag">★ FEATURED</span>
+      <span class="card-featured__lang" data-cms="work.feat.lang">Jupyter / PyTorch</span>
     </div>
-    <h3 class="card-featured__title">Durian Leaf Disease Classification</h3>
-    <p class="card-featured__desc">
+    <h3 class="card-featured__title" data-cms="work.feat.name">Durian Leaf Disease Classification</h3>
+    <p class="card-featured__desc" data-cms="work.feat.desc">
       A deep-learning image classifier that identifies durian leaf diseases from photos — built to
       support early detection for growers. Covers the full loop: dataset curation, augmentation,
       CNN training, and evaluation in a reproducible notebook.
@@ -71,10 +71,10 @@ const projects = [
         <a href={p.href} class="card" data-track={`project-${p.num}-` + p.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 24)}>
           <div class="card__head">
             <span class="card__num">{p.num}</span>
-            <span class="card__lang">{p.lang}</span>
+            <span class="card__lang" data-cms={`work.${p.num}.lang`}>{p.lang}</span>
           </div>
-          <h3 class="card__title">{p.title}</h3>
-          <p class="card__desc">{p.desc}</p>
+          <h3 class="card__title" data-cms={`work.${p.num}.name`}>{p.title}</h3>
+          <p class="card__desc" data-cms={`work.${p.num}.desc`}>{p.desc}</p>
           <div class="tag-row">
             {p.tags.map((t) => (
               <span class="tag">{t}</span>
