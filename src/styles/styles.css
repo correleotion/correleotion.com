@@ -393,12 +393,10 @@ body {
   max-width: 160px; /* mobile stacks to one column — don't balloon */
   height: auto;
   aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  object-fit: contain;
-  background: #fff;
-  padding: 4px;
   display: block;
+  opacity: 0.92;
 }
+html[data-theme="dark"] .edu-logo { filter: invert(1); }
 .exp-logo {
   width: 100%;
   max-width: 160px; /* mobile stacks to one column — don't balloon */
