@@ -24,7 +24,30 @@
   var visitorId = stored(localStorage, "corr_vid");
   var sessionId = stored(sessionStorage, "corr_sid");
 
+  // country lookup (free, no key; the visitor's browser asks about its own IP).
+  // Cached per session; events wait for it at most 1.5s.
+  var geoPromise = (function () {
+    var cached = null;
+    try { cached = sessionStorage.getItem("corr_geo"); } catch (e) {}
+    if (cached) return Promise.resolve(cached === "??" ? null : cached);
+    var timeout = new Promise(function (res) { setTimeout(res, 1500, null); });
+    var lookup = fetch("https://country.is/")
+      .then(function (r) { return r.json(); })
+      .then(function (j) { return j && j.country ? j.country : null; })
+      .catch(function () { return null; });
+    return Promise.race([lookup, timeout]).then(function (c) {
+      try { sessionStorage.setItem("corr_geo", c || "??"); } catch (e) {}
+      return c;
+    });
+  })();
+
   function send(type, data) {
+    geoPromise.then(function (country) { sendNow(type, data, country); });
+  }
+
+  function sendNow(type, data, country) {
+    data = data || {};
+    if (country) data.country = country;
     var body = {
       type: type,
       visitor_id: visitorId,
@@ -35,7 +58,7 @@
       lang: navigator.language,
       screen: window.screen.width + "x" + window.screen.height,
       theme: document.documentElement.getAttribute("data-theme") || "light",
-      data: data || {},
+      data: data,
     };
     try {
       fetch(cfg.url + "/rest/v1/events", {
