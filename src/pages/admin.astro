@@ -117,11 +117,6 @@ import '../styles/admin.css';
             <h2 class="panel__title">Sections seen</h2>
             <div class="bars" id="bars-sections"></div>
           </div>
-          <div class="panel">
-            <h2 class="panel__title">Countries</h2>
-            <div class="bars" id="bars-countries"></div>
-          </div>
-
           <div class="panel panel--wide">
             <h2 class="panel__title">Recently copied text</h2>
             <div class="etable-wrap">
@@ -277,18 +272,6 @@ import '../styles/admin.css';
           });
           drawBars('bars-sections', [...secCount.entries()].sort((a, b) => b[1] - a[1]));
 
-          const byCountry = new Map();
-          views.forEach((r) => {
-            const cc = r.data?.country || '??';
-            if (!byCountry.has(cc)) byCountry.set(cc, new Set());
-            byCountry.get(cc).add(r.visitor_id);
-          });
-          drawBars('bars-countries', [...byCountry.entries()]
-            .map(([cc, set]) => [
-              cc === '??' ? '· unknown' : flagOf(cc) + ' ' + ((regionName && regionName.of(cc)) || cc),
-              set.size,
-            ])
-            .sort((a, b) => b[1] - a[1]));
           fillCopies(copies.slice(0, 20));
           fillEvents(rows.slice(0, 60));
         }
