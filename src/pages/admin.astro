@@ -53,10 +53,13 @@ import '../styles/admin.css';
         </div>
 
         <div class="filters" id="range-filters" role="group" aria-label="Time range">
-          <button type="button" class="btn-ghost" data-days="7">7D</button>
-          <button type="button" class="btn-ghost" data-days="14" aria-pressed="true">14D</button>
-          <button type="button" class="btn-ghost" data-days="30">30D</button>
-          <button type="button" class="btn-ghost" data-days="90">90D</button>
+          <button type="button" class="btn-ghost" data-days="1">1D</button>
+          <button type="button" class="btn-ghost" data-days="7">1W</button>
+          <button type="button" class="btn-ghost" data-days="30" aria-pressed="true">1M</button>
+          <button type="button" class="btn-ghost" data-days="91">3M</button>
+          <button type="button" class="btn-ghost" data-days="182">6M</button>
+          <button type="button" class="btn-ghost" data-days="365">1Y</button>
+          <button type="button" class="btn-ghost" data-days="all">ALL</button>
         </div>
 
         <div class="tiles">
@@ -89,7 +92,7 @@ import '../styles/admin.css';
 
         <div class="panel-grid">
           <div class="panel panel--wide">
-            <h2 class="panel__title">Pageviews per day</h2>
+            <h2 class="panel__title" id="line-title">Pageviews per day</h2>
             <div class="chart-wrap">
               <canvas id="line-chart"></canvas>
               <div class="chart-tip" id="line-tip"></div>
@@ -147,7 +150,7 @@ import '../styles/admin.css';
       } else {
         const supa = createClient(cfg.url, cfg.anonKey);
         let allRows = [];
-        let rangeDays = 14;
+        let rangeDays = 30;
 
         // ---------- auth ----------
         const { data: { session } } = await supa.auth.getSession();
@@ -173,7 +176,7 @@ import '../styles/admin.css';
 
         document.querySelectorAll('#range-filters [data-days]').forEach((b) => {
           b.addEventListener('click', () => {
-            rangeDays = +b.dataset.days;
+            rangeDays = b.dataset.days === 'all' ? 'all' : +b.dataset.days;
             document.querySelectorAll('#range-filters [data-days]').forEach((x) =>
               x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
             render();
@@ -188,11 +191,9 @@ import '../styles/admin.css';
 
         // ---------- data ----------
         async function load() {
-          const since = new Date(Date.now() - 90 * 864e5).toISOString();
           const { data, error } = await supa
             .from('events')
             .select('*')
-            .gte('created_at', since)
             .order('created_at', { ascending: false })
             .limit(10000);
           if (error) { alert('Load failed: ' + error.message); return; }
@@ -212,7 +213,7 @@ import '../styles/admin.css';
         const device = (ua) => /mobile|iphone|android/i.test(ua || '') ? 'mobile' : 'desktop';
 
         function render() {
-          const cutoff = Date.now() - rangeDays * 864e5;
+          const cutoff = rangeDays === 'all' ? 0 : Date.now() - rangeDays * 864e5;
           const rows = allRows.filter((r) => new Date(r.created_at).getTime() >= cutoff);
           const views = rows.filter((r) => r.type === 'pageview');
           const clicks = rows.filter((r) => r.type === 'click');
@@ -277,13 +278,31 @@ import '../styles/admin.css';
           const grid = cs.getPropertyValue('--line').trim();
           const faint = cs.getPropertyValue('--faint').trim();
 
-          const byDay = new Map();
-          views.forEach((r) => { const k = dayKey(r.created_at); byDay.set(k, (byDay.get(k) || 0) + 1); });
           lineDays = [];
-          for (let i = rangeDays - 1; i >= 0; i--) {
-            const d = new Date(Date.now() - i * 864e5);
-            const k = dayKey(d);
-            lineDays.push({ key: k, label: (d.getMonth() + 1) + '/' + d.getDate(), n: byDay.get(k) || 0 });
+          if (rangeDays === 1) {
+            $('line-title').textContent = 'Pageviews per hour';
+            const hourKey = (d) => { const x = new Date(d); return dayKey(x) + ' ' + x.getHours(); };
+            const byHour = new Map();
+            views.forEach((r) => { const k = hourKey(r.created_at); byHour.set(k, (byHour.get(k) || 0) + 1); });
+            for (let i = 23; i >= 0; i--) {
+              const d = new Date(Date.now() - i * 3600e3);
+              lineDays.push({ label: String(d.getHours()).padStart(2, '0') + ':00', n: byHour.get(hourKey(d)) || 0 });
+            }
+          } else {
+            $('line-title').textContent = 'Pageviews per day';
+            let days = rangeDays;
+            if (days === 'all') {
+              const oldest = views.length
+                ? new Date(views[views.length - 1].created_at).getTime()
+                : Date.now();
+              days = Math.max(7, Math.min(730, Math.ceil((Date.now() - oldest) / 864e5) + 1));
+            }
+            const byDay = new Map();
+            views.forEach((r) => { const k = dayKey(r.created_at); byDay.set(k, (byDay.get(k) || 0) + 1); });
+            for (let i = days - 1; i >= 0; i--) {
+              const d = new Date(Date.now() - i * 864e5);
+              lineDays.push({ label: (d.getMonth() + 1) + '/' + d.getDate(), n: byDay.get(dayKey(d)) || 0 });
+            }
           }
           const PAD = { l: 34, r: 14, t: 12, b: 24 };
           const max = Math.max(4, ...lineDays.map((d) => d.n));
