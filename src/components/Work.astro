@@ -42,11 +42,11 @@ const projects = [
       <span class="section__num">04</span>
       <h2 class="section__title">Selected Projects</h2>
     </div>
-    <a href="https://github.com/correleotion?tab=repositories" class="link-muted">all repos ↗</a>
+    <a href="https://github.com/correleotion?tab=repositories" class="link-muted" data-track="all-repos">all repos ↗</a>
   </div>
 
   <!-- featured -->
-  <a href="https://github.com/correleotion/Durian-Leaf-Disease-Classification" class="card-featured">
+  <a href="https://github.com/correleotion/Durian-Leaf-Disease-Classification" class="card-featured" data-track="project-durian-leaf">
     <div class="card-featured__head">
       <span class="card-featured__tag">★ FEATURED</span>
       <span class="card-featured__lang">Jupyter / PyTorch</span>
@@ -68,7 +68,7 @@ const projects = [
   <div class="card-grid">
     {
       projects.map((p) => (
-        <a href={p.href} class="card">
+        <a href={p.href} class="card" data-track={`project-${p.num}-` + p.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 24)}>
           <div class="card__head">
             <span class="card__num">{p.num}</span>
             <span class="card__lang">{p.lang}</span>

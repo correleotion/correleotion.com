@@ -97,7 +97,11 @@ import '../styles/admin.css';
           </div>
 
           <div class="panel">
-            <h2 class="panel__title">Top clicked</h2>
+            <h2 class="panel__title">Button clicks</h2>
+            <div class="bars" id="bars-buttons"></div>
+          </div>
+          <div class="panel">
+            <h2 class="panel__title">Top clicked (anything)</h2>
             <div class="bars" id="bars-clicks"></div>
           </div>
           <div class="panel">
@@ -224,6 +228,15 @@ import '../styles/admin.css';
           $('t-cv').textContent = fmt(clicks.filter((r) => (r.data?.href || '').includes('resume')).length);
 
           drawLine(views);
+          const BTN_NAMES = {
+            'theme-toggle': 'Theme (dark/light)', 'cv-open': 'CV open', 'brand-home': 'Logo → top',
+            'nav-about': 'Nav: about', 'nav-work': 'Nav: work', 'nav-stack': 'Nav: stack', 'nav-contact': 'Nav: contact',
+            'hero-view-work': 'View work', 'hero-github': 'GitHub (hero)', 'email': 'Email link',
+            'social-github': 'GitHub (social)', 'social-linkedin': 'LinkedIn', 'social-x': 'X', 'social-instagram': 'Instagram',
+            'contact-send': 'Send message', 'all-repos': 'All repos', 'project-durian-leaf': 'Project: Durian Leaf',
+          };
+          drawBars('bars-buttons', tally(clicks.filter((r) => r.data?.button),
+            (r) => BTN_NAMES[r.data.button] || r.data.button));
           drawBars('bars-clicks', tally(clicks, (r) => r.data?.text || r.data?.href || '(unknown)'));
           drawBars('bars-sections', tally(sects, (r) => r.data?.section || '(unknown)'));
           fillCopies(copies.slice(0, 20));

@@ -60,8 +60,10 @@
     var el = e.target.closest("a, button");
     if (!el) return;
     var section = el.closest("section[id], header, nav, footer");
+    var tracked = e.target.closest("[data-track]");
     send("click", {
       tag: el.tagName.toLowerCase(),
+      button: tracked ? tracked.getAttribute("data-track") : null, // stable button id
       text: (el.textContent || "").trim().replace(/\s+/g, " ").slice(0, 80),
       href: el.getAttribute("href") || null,
       section: section ? (section.id || section.tagName.toLowerCase()) : null,
