@@ -170,11 +170,17 @@
   white-space: nowrap;
   color: var(--body);
 }
-.bar-row__track { height: 14px; position: relative; }
+.bar-row__track {
+  display: block;
+  height: 15px;
+  position: relative;
+  background: var(--line); /* faint full-length track behind the bar */
+}
 .bar-row__fill {
+  display: block; /* spans are inline — width/height are ignored otherwise */
   height: 100%;
   background: var(--fg);
-  opacity: 0.78;
+  opacity: 0.82;
   border-radius: 0 3px 3px 0; /* rounded data-end only */
   min-width: 2px;
 }
