@@ -428,8 +428,18 @@ import '../styles/admin.css';
           experience: '03 · Experience', work: '04 · Projects', stack: '05 · Stack',
           awards: '06 · Awards', writing: '07 · Writing', contact: '08 · Contact', footer: 'Footer',
         };
+        // sections that support adding NEW items from the CMS (cloned on the live site)
+        const EXTRA_DEFS = {
+          experience: { key: 'extra.exp', label: 'experience entries',
+            fields: [['time', 'Jan 2027 — Present'], ['role', 'Company / role name'], ['sub', 'Position · City'], ['desc', 'What you did there']] },
+          awards: { key: 'extra.awards', label: 'awards',
+            fields: [['place', '1st place'], ['name', 'Competition name'], ['sub', 'Organizer · Year'], ['desc', 'Short description']] },
+          writing: { key: 'extra.writing', label: 'posts',
+            fields: [['date', '2027.01'], ['name', 'Post title']] },
+        };
         let cmsLoaded = false;
         let cmsOverrides = new Map();
+        let cmsExtras = new Map();
 
         document.querySelectorAll('[data-tab]').forEach((b) => {
           b.addEventListener('click', () => {
@@ -452,7 +462,12 @@ import '../styles/admin.css';
             ]);
             if (ovRes.error) throw new Error(ovRes.error.message +
               ' — did you run supabase/content.sql?');
-            cmsOverrides = new Map((ovRes.data || []).map((r) => [r.key, r.value?.text ?? '']));
+            cmsOverrides = new Map();
+            cmsExtras = new Map();
+            (ovRes.data || []).forEach((r) => {
+              if (r.key.startsWith('extra.')) cmsExtras.set(r.key, r.value?.items || []);
+              else cmsOverrides.set(r.key, r.value?.text ?? '');
+            });
 
             const doc = new DOMParser().parseFromString(await pageRes.text(), 'text/html');
             const groups = new Map();
@@ -470,9 +485,25 @@ import '../styles/admin.css';
 
             groupsEl.innerHTML = '';
             groups.forEach((fields, g) => {
-              const panel = document.createElement('div');
-              panel.className = 'panel cms-group';
-              panel.innerHTML = '<h2 class="panel__title">' + esc(SECTION_NAMES[g] || g) + '</h2>';
+              const editedCount = fields.filter((f) => cmsOverrides.has(f.key)).length;
+              const extraDef = EXTRA_DEFS[g];
+              const extraItems = extraDef ? (cmsExtras.get(extraDef.key) || []) : [];
+
+              const det = document.createElement('details');
+              det.className = 'cms-group';
+              const meta = [fields.length + ' fields'];
+              if (editedCount) meta.push(editedCount + ' edited');
+              if (extraItems.length) meta.push(extraItems.length + ' added');
+              det.innerHTML =
+                '<summary class="cms-group__head">' +
+                  '<span class="cms-group__name">' + esc(SECTION_NAMES[g] || g) + '</span>' +
+                  '<span class="cms-group__meta">' + esc(meta.join(' · ')) +
+                    ((editedCount || extraItems.length) ? ' <b class="cms-dot">●</b>' : '') +
+                  ' <span class="cms-group__chev">▾</span></span>' +
+                '</summary>';
+              const body = document.createElement('div');
+              body.className = 'cms-group__body';
+
               fields.forEach((f) => {
                 const cur = cmsOverrides.has(f.key) ? cmsOverrides.get(f.key) : f.def;
                 const wrap = document.createElement('div');
@@ -490,13 +521,45 @@ import '../styles/admin.css';
                 ta.dataset.key = f.key;
                 ta.dataset.def = f.def;
                 wrap.appendChild(ta);
-                panel.appendChild(wrap);
+                body.appendChild(wrap);
               });
-              groupsEl.appendChild(panel);
+
+              // "+ add item" editor for sections that support it
+              if (extraDef) {
+                const ex = document.createElement('div');
+                ex.className = 'cms-extras';
+                ex.dataset.extra = extraDef.key;
+                ex.innerHTML = '<div class="cms-extras__head">ADDED ' + esc(extraDef.label.toUpperCase()) +
+                  ' <span class="cms-group__meta">(saved items appear on the live site)</span></div>' +
+                  '<div class="cms-extras__list"></div>' +
+                  '<button type="button" class="btn-ghost cms-add">+ ADD</button>';
+                const list = ex.querySelector('.cms-extras__list');
+                const addItem = (values) => {
+                  const item = document.createElement('div');
+                  item.className = 'cms-item';
+                  item.innerHTML = '<button type="button" class="cms-item__remove">✕ REMOVE</button>' +
+                    extraDef.fields.map(([f, ph]) =>
+                      '<div class="cms-field__head"><span class="cms-field__key">' + esc(f) + '</span></div>' +
+                      '<textarea class="contact-form__input cms-input cms-item__input" rows="1" data-f="' + esc(f) +
+                        '" placeholder="' + esc(ph) + '"></textarea>').join('');
+                  extraDef.fields.forEach(([f]) => {
+                    item.querySelector('[data-f="' + f + '"]').value = (values && values[f]) || '';
+                  });
+                  item.querySelector('.cms-item__remove').addEventListener('click', () => item.remove());
+                  list.appendChild(item);
+                };
+                extraItems.forEach(addItem);
+                ex.querySelector('.cms-add').addEventListener('click', () => addItem());
+                body.appendChild(ex);
+              }
+
+              det.appendChild(body);
+              groupsEl.appendChild(det);
             });
 
             groupsEl.querySelectorAll('.cms-revert').forEach((b) => {
-              b.addEventListener('click', async () => {
+              b.addEventListener('click', async (e) => {
+                e.preventDefault();
                 await supa.from('content').delete().eq('key', b.dataset.key);
                 cmsLoaded = false; loadCms();
               });
@@ -512,13 +575,27 @@ import '../styles/admin.css';
           status.textContent = 'saving…';
           const upserts = [];
           const deletes = [];
-          document.querySelectorAll('.cms-input').forEach((ta) => {
+          document.querySelectorAll('.cms-input:not(.cms-item__input)').forEach((ta) => {
             const key = ta.dataset.key;
             const cur = ta.value.trim();
             const def = ta.dataset.def;
             const ov = cmsOverrides.has(key) ? cmsOverrides.get(key) : null;
             if (cur === def) { if (ov !== null) deletes.push(key); return; }
             if (cur !== ov) upserts.push({ key, value: { text: cur }, updated_at: new Date().toISOString() });
+          });
+          // added items (experience / awards / writing)
+          document.querySelectorAll('.cms-extras').forEach((ex) => {
+            const key = ex.dataset.extra;
+            const items = [...ex.querySelectorAll('.cms-item')].map((b) =>
+              Object.fromEntries([...b.querySelectorAll('[data-f]')].map((i) => [i.dataset.f, i.value.trim()])))
+              .filter((it) => Object.values(it).some((v) => v));
+            const prev = JSON.stringify(cmsExtras.get(key) || []);
+            if (items.length) {
+              if (JSON.stringify(items) !== prev)
+                upserts.push({ key, value: { items }, updated_at: new Date().toISOString() });
+            } else if (cmsExtras.has(key)) {
+              deletes.push(key);
+            }
           });
           try {
             if (upserts.length) {
