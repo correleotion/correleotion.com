@@ -143,7 +143,6 @@
 
   var COLS = 42, ROWS = 22;
   var CH = " .:-=+*#";
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function frame(t) {
     var out = "";
@@ -161,14 +160,65 @@
     el.textContent = out;
   }
 
-  if (reduceMotion) { frame(1.7); return; }
-
   var running = false;
   var timer = null;
   function start() {
     if (running) return;
     running = true;
     timer = setInterval(function () { frame(performance.now() * 0.0012); }, 90);
+  }
+  function stop() { running = false; clearInterval(timer); }
+
+  new IntersectionObserver(function (entries) {
+    entries[0].isIntersecting ? start() : stop();
+  }).observe(el);
+  document.addEventListener("visibilitychange", function () {
+    document.hidden ? stop() : start();
+  });
+})();
+
+
+/* ASCII portrait shimmer: a soft scanline sweeps down the silhouette,
+   momentarily dissolving characters in its path. */
+(function () {
+  "use strict";
+
+  var el = document.querySelector(".ascii-portrait__art");
+  if (!el) return;
+
+  var base = el.textContent.split("\n");
+  var ROWS = base.length;
+  var NOISE = ".:-=+*";
+
+  function frame(t) {
+    var scan = (t * 6) % (ROWS + 14) - 7; // sweeps past both edges
+    var out = [];
+    for (var y = 0; y < ROWS; y++) {
+      var line = base[y];
+      var d = Math.abs(y - scan);
+      if (d < 2.2) {
+        var p = 1 - d / 2.2; // strongest at the scan center
+        var chars = "";
+        for (var x = 0; x < line.length; x++) {
+          var c = line[x];
+          chars += (c !== " " && Math.random() < p * 0.8)
+            ? NOISE[(Math.random() * NOISE.length) | 0]
+            : c;
+        }
+        out.push(chars);
+      } else {
+        out.push(line);
+      }
+    }
+    el.textContent = out.join("\n");
+  }
+
+  var running = false;
+  var timer = null;
+  function start() {
+    if (running) return;
+    running = true;
+    timer = setInterval(function () { frame(performance.now() * 0.001); }, 90);
   }
   function stop() { running = false; clearInterval(timer); }
 
