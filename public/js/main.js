@@ -131,33 +131,46 @@
   history.replaceState(null, "", location.pathname + location.hash);
 })();
 
-/* Hero ASCII art: a slow-drifting interference field rendered as characters.
-   Density ramp " .:-=+*#" carries the intensity — pure text, theme-agnostic.
-   Pauses off-screen / in hidden tabs; renders one still frame under
-   prefers-reduced-motion. */
+/* Hero ASCII art: the classic spinning 3D torus (a la donut.c) —
+   real 3D projection with a z-buffer and luminance-shaded characters.
+   Pauses off-screen / in hidden tabs. */
 (function () {
   "use strict";
 
   var el = document.getElementById("hero-ascii");
   if (!el) return;
 
-  var COLS = 42, ROWS = 22;
-  var CH = " .:-=+*#";
+  var COLS = 52, ROWS = 26;
+  var XS = COLS * 0.375, YS = ROWS * 0.60; // projection scales (chars are ~2x taller than wide)
+  var SHADE = ".,-~:;=!*#$@";
+  var A = 1.0, B = 0.4; // rotation angles around two axes
 
-  function frame(t) {
-    var out = "";
-    for (var y = 0; y < ROWS; y++) {
-      for (var x = 0; x < COLS; x++) {
-        var v =
-          Math.sin(x * 0.32 + t) +
-          Math.sin(y * 0.55 - t * 0.7) +
-          Math.sin((x * 0.6 + y) * 0.24 + t * 0.45);
-        var i = Math.round(((v + 3) / 6) * (CH.length - 1));
-        out += CH[Math.max(0, Math.min(CH.length - 1, i))];
+  function frame() {
+    var b = new Array(COLS * ROWS).fill(" ");
+    var z = new Float32Array(COLS * ROWS);
+    var e = Math.sin(A), g = Math.cos(A);
+    var m = Math.cos(B), n = Math.sin(B);
+    for (var j = 0; j < 6.28; j += 0.07) {       // around the tube's big circle
+      var d = Math.cos(j), f = Math.sin(j), h = d + 2;
+      for (var i = 0; i < 6.28; i += 0.02) {     // around the tube itself
+        var c = Math.sin(i), l = Math.cos(i);
+        var D = 1 / (c * h * e + f * g + 5);     // inverse depth
+        var t = c * h * g - f * e;
+        var x = (COLS / 2 + XS * D * (l * h * m - t * n)) | 0;
+        var y = (ROWS / 2 + YS * D * (l * h * n + t * m)) | 0;
+        var o = x + COLS * y;
+        var N = (8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n)) | 0;
+        if (y >= 0 && y < ROWS && x >= 0 && x < COLS && D > z[o]) {
+          z[o] = D;
+          b[o] = SHADE[N > 0 ? N : 0];
+        }
       }
-      out += "\n";
     }
+    var out = "";
+    for (var k = 0; k < b.length; k++) out += b[k] + (k % COLS === COLS - 1 ? "\n" : "");
     el.textContent = out;
+    A += 0.05;
+    B += 0.023;
   }
 
   var running = false;
@@ -165,7 +178,7 @@
   function start() {
     if (running) return;
     running = true;
-    timer = setInterval(function () { frame(performance.now() * 0.0012); }, 90);
+    timer = setInterval(frame, 55);
   }
   function stop() { running = false; clearInterval(timer); }
 
@@ -176,7 +189,6 @@
     document.hidden ? stop() : start();
   });
 })();
-
 
 /* ASCII portrait shimmer: a soft scanline sweeps down the silhouette,
    momentarily dissolving characters in its path. */
