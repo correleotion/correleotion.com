@@ -130,3 +130,52 @@
   // clean the query string but keep the #contact anchor position
   history.replaceState(null, "", location.pathname + location.hash);
 })();
+
+/* Hero ASCII art: a slow-drifting interference field rendered as characters.
+   Density ramp " .:-=+*#" carries the intensity — pure text, theme-agnostic.
+   Pauses off-screen / in hidden tabs; renders one still frame under
+   prefers-reduced-motion. */
+(function () {
+  "use strict";
+
+  var el = document.getElementById("hero-ascii");
+  if (!el) return;
+
+  var COLS = 42, ROWS = 22;
+  var CH = " .:-=+*#";
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function frame(t) {
+    var out = "";
+    for (var y = 0; y < ROWS; y++) {
+      for (var x = 0; x < COLS; x++) {
+        var v =
+          Math.sin(x * 0.32 + t) +
+          Math.sin(y * 0.55 - t * 0.7) +
+          Math.sin((x * 0.6 + y) * 0.24 + t * 0.45);
+        var i = Math.round(((v + 3) / 6) * (CH.length - 1));
+        out += CH[Math.max(0, Math.min(CH.length - 1, i))];
+      }
+      out += "\n";
+    }
+    el.textContent = out;
+  }
+
+  if (reduceMotion) { frame(1.7); return; }
+
+  var running = false;
+  var timer = null;
+  function start() {
+    if (running) return;
+    running = true;
+    timer = setInterval(function () { frame(performance.now() * 0.0012); }, 90);
+  }
+  function stop() { running = false; clearInterval(timer); }
+
+  new IntersectionObserver(function (entries) {
+    entries[0].isIntersecting ? start() : stop();
+  }).observe(el);
+  document.addEventListener("visibilitychange", function () {
+    document.hidden ? stop() : start();
+  });
+})();

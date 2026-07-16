@@ -168,6 +168,23 @@ body {
 
 /* ---- hero ---- */
 .hero { padding: 32px 0; }
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.hero-ascii {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  opacity: 0.75;
+  user-select: none;
+  overflow: hidden;
+}
 .hero__coords {
   font-family: var(--mono);
   font-size: 12px;
@@ -385,6 +402,34 @@ body {
   border-radius: 50%;
   border: 1px solid var(--line);
   font-size: 9px;
+}
+
+/* ascii portrait (About) */
+.ascii-portrait {
+  margin: 0;
+  border: 1px solid var(--linex);
+  background: var(--card);
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.ascii-portrait__art {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.12;
+  color: var(--fg);
+  opacity: 0.85;
+  user-select: none;
+}
+.ascii-portrait__caption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
 }
 
 /* real images dropped into the old placeholder slots */
@@ -744,6 +789,8 @@ html[data-theme="dark"] .stack-item img { filter: invert(1); }
 
 /* ---- responsive ---- */
 @media (max-width: 960px) {
+  .hero__grid { grid-template-columns: 1fr; }
+  .hero__side { display: none; }
   .contact__grid { grid-template-columns: 1fr; gap: 48px; }
 }
 
