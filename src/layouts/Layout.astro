@@ -9,6 +9,8 @@ import '../styles/styles.css';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://esm.sh; connect-src 'self' https://oglijjoiwkenfxddnqol.supabase.co https://country.is https://esm.sh; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Thanakorn Sin-on — AI Engineer & Data Scientist</title>
     <meta
       name="description"
@@ -16,17 +18,7 @@ import '../styles/styles.css';
     />
 
     <!-- apply saved theme before first paint to avoid a flash -->
-    <script is:inline>
-      (function () {
-        try {
-          var t = localStorage.getItem('theme');
-          var a = localStorage.getItem('accent');
-          var el = document.documentElement;
-          if (t) el.setAttribute('data-theme', t);
-          if (a) el.setAttribute('data-accent', a);
-        } catch (e) {}
-      })();
-    </script>
+    <script is:inline src="/js/theme-boot.js"></script>
   </head>
   <body>
     <slot />
