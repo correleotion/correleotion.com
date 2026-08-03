@@ -140,7 +140,7 @@
   var el = document.getElementById("hero-ascii");
   if (!el) return;
 
-  var COLS = 52, ROWS = 26;
+  var COLS = 64, ROWS = 32;
   var XS = COLS * 0.375, YS = ROWS * 0.60; // projection scales (chars are ~2x taller than wide)
   var SHADE = ".,-~:;=!*#$@";
   var A = 1.0, B = 0.4; // rotation angles around two axes
