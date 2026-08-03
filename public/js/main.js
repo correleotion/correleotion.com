@@ -131,9 +131,8 @@
   history.replaceState(null, "", location.pathname + location.hash);
 })();
 
-/* Hero ASCII art: the classic spinning 3D torus (a la donut.c) —
-   real 3D projection with a z-buffer and luminance-shaded characters.
-   Pauses off-screen / in hidden tabs. */
+/* Hero ASCII art: a live scatter plot that moves between negative, neutral,
+   and positive correlation. Pauses off-screen / in hidden tabs. */
 (function () {
   "use strict";
 
@@ -141,36 +140,56 @@
   if (!el) return;
 
   var COLS = 64, ROWS = 32;
-  var XS = COLS * 0.375, YS = ROWS * 0.60; // projection scales (chars are ~2x taller than wide)
-  var SHADE = ".,-~:;=!*#$@";
-  var A = 1.0, B = 0.4; // rotation angles around two axes
+  var LEFT = 2, RIGHT = COLS - 2, TOP = 4, BOTTOM = ROWS - 3;
+  var xs = [], noise = [], seed = 42;
+
+  function random() {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+
+  for (var p = 0; p < 110; p++) {
+    xs.push(random() * 2 - 1);
+    noise.push((random() + random() + random()) / 1.5 - 1);
+  }
 
   function frame() {
     var b = new Array(COLS * ROWS).fill(" ");
-    var z = new Float32Array(COLS * ROWS);
-    var e = Math.sin(A), g = Math.cos(A);
-    var m = Math.cos(B), n = Math.sin(B);
-    for (var j = 0; j < 6.28; j += 0.07) {       // around the tube's big circle
-      var d = Math.cos(j), f = Math.sin(j), h = d + 2;
-      for (var i = 0; i < 6.28; i += 0.02) {     // around the tube itself
-        var c = Math.sin(i), l = Math.cos(i);
-        var D = 1 / (c * h * e + f * g + 5);     // inverse depth
-        var t = c * h * g - f * e;
-        var x = (COLS / 2 + XS * D * (l * h * m - t * n)) | 0;
-        var y = (ROWS / 2 + YS * D * (l * h * n + t * m)) | 0;
-        var o = x + COLS * y;
-        var N = (8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n)) | 0;
-        if (y >= 0 && y < ROWS && x >= 0 && x < COLS && D > z[o]) {
-          z[o] = D;
-          b[o] = SHADE[N > 0 ? N : 0];
-        }
-      }
+    var r = Math.sin(performance.now() * 0.00045) * 0.92;
+    var spread = Math.sqrt(1 - r * r) * 0.72;
+    var cx = Math.round((LEFT + RIGHT) / 2);
+    var cy = Math.round((TOP + BOTTOM) / 2);
+
+    function put(x, y, char) {
+      if (x >= 0 && x < COLS && y >= 0 && y < ROWS) b[x + COLS * y] = char;
     }
+    function plotX(x) { return Math.round(LEFT + (x + 1) * 0.5 * (RIGHT - LEFT)); }
+    function plotY(y) { return Math.round(BOTTOM - (y + 1) * 0.5 * (BOTTOM - TOP)); }
+
+    for (var x = LEFT; x <= RIGHT; x++) put(x, cy, "-");
+    for (var y = TOP; y <= BOTTOM; y++) put(cx, y, "|");
+    put(cx, cy, "+");
+
+    for (var col = LEFT; col <= RIGHT; col++) {
+      var lineX = (col - LEFT) / (RIGHT - LEFT) * 2 - 1;
+      put(col, plotY(r * lineX), ".");
+    }
+
+    for (var i = 0; i < xs.length; i++) {
+      var px = plotX(xs[i]);
+      var py = plotY(Math.max(-1, Math.min(1, r * xs[i] + spread * noise[i])));
+      put(px, py, b[px + COLS * py] === " " ? "*" : "#");
+    }
+
+    var label = "r = " + (r >= 0 ? "+" : "") + r.toFixed(2) + "  " +
+      (r > 0.15 ? "positive" : r < -0.15 ? "negative" : "no") + " correlation";
+    for (var q = 0; q < label.length; q++) put(LEFT + q, 1, label[q]);
+
     var out = "";
-    for (var k = 0; k < b.length; k++) out += b[k] + (k % COLS === COLS - 1 ? "\n" : "");
+    for (var k = 0; k < b.length; k++) {
+      out += b[k] + (k % COLS === COLS - 1 ? "\n" : "");
+    }
     el.textContent = out;
-    A += 0.05;
-    B += 0.023;
   }
 
   var running = false;
