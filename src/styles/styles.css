@@ -432,6 +432,24 @@ body {
   color: var(--faint);
 }
 
+.about-portrait {
+  margin: 0;
+  border: 1px solid var(--linex);
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 14px;
+}
+.about-portrait__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 /* real images dropped into the old placeholder slots */
 .edu-logo {
   width: 100%;

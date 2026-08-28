@@ -3,3 +3,4 @@ dist/
 .astro/
 .DS_Store
 CLAUDE.md
+public/img/profile.jpg
