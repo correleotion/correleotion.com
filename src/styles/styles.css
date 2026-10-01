@@ -469,7 +469,7 @@ html[data-theme="dark"] .edu-logo { filter: invert(1); }
 }
 html[data-theme="dark"] .exp-logo { filter: invert(1); }
 .exp-logo--mono { filter: grayscale(1) contrast(1.8); }
-html[data-theme="dark"] .exp-logo--mono { filter: grayscale(1) contrast(1.8) invert(1); }
+html[data-theme="dark"] .exp-logo--mono { filter: grayscale(1) contrast(1.8) brightness(2.5); }
 
 /* ---- work ---- */
 .card-featured {
