@@ -468,6 +468,7 @@ html[data-theme="dark"] .edu-logo { filter: invert(1); }
   opacity: 0.9;
 }
 html[data-theme="dark"] .exp-logo { filter: invert(1); }
+html[data-theme="dark"] .exp-logo--color { filter: none; }
 
 /* ---- work ---- */
 .card-featured {
