@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.118.0';
 
       const cfg = window.SUPABASE_CFG || {};
       const $ = (id) => document.getElementById(id);

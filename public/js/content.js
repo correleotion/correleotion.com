@@ -29,6 +29,12 @@
     },
   };
 
+  // CMS-supplied links may only be http(s), mailto, or relative/anchor — never javascript: or data:
+  function safeHref(h) {
+    h = String(h || "").trim();
+    return /^(https?:|mailto:|\/|#)/i.test(h) ? h : "#";
+  }
+
   function renderExtras(def, items) {
     var container = document.querySelector(def.container);
     if (!container || !Array.isArray(items)) return;
@@ -49,7 +55,7 @@
         var el = c.querySelector(def.map[f]);
         if (el) el.textContent = it[f] || "";
       });
-      if (c.tagName === "A") c.setAttribute("href", it.href || "#");
+      if (c.tagName === "A") c.setAttribute("href", safeHref(it.href));
       container.insertBefore(c, anchor);
     });
   }
@@ -66,7 +72,7 @@
         var el = document.querySelector('[data-cms="' + row.key + '"]');
         if (!el) return;
         el.textContent = row.value.text;
-        if (row.value.href && el.tagName === "A") el.setAttribute("href", row.value.href);
+        if (row.value.href && el.tagName === "A") el.setAttribute("href", safeHref(row.value.href));
       });
       rows.forEach(function (row) {
         if (EXTRAS[row.key] && row.value) renderExtras(EXTRAS[row.key], row.value.items);
